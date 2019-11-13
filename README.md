@@ -26,14 +26,13 @@ Ps: Viva o agronegócio.
 Como é proposto pelo projeto serão utilizadas as tecnologias:
     - Biblioteca Allegro:
         Biblioteca de interface gráfica c/c++ para desenvolvimento de jogos. tutoriais de auxílio podem ser encontrados nos sites a seguir.
-            1. [Rafael](https://rafaeltoledo.net/tutoriais-allegro-5/)
-            2. [IFSul](https://aprendendoallegro.tk/)
-            3. [Video Aulas](https://www.youtube.com/watch?v=IZ2krJ8Ls2A&list=PL6B459AAE1642C8B4)
+        1. [Rafael](https://rafaeltoledo.net/tutoriais-allegro-5/)
+        2. [IFSul](https://aprendendoallegro.tk/)
+        3. [Video Aulas](https://www.youtube.com/watch?v=IZ2krJ8Ls2A&list=PL6B459AAE1642C8B4)
     
     - Cliente e servidor:
-        Para o cliente servidor utilizaremos as bibliotecas de conexão socket disponibilizadas e, desenvolvidas, especialmente para o desenvolvimento desse projeto de introdução a programação. Sua documentação pode ser encontrada em
-            1. [server.h](https://github.com/luucasv/projetoIP/blob/master/server-doc.md)
-            2. [client.h](https://github.com/luucasv/projetoIP/blob/master/client-doc.md)
+        Para o cliente servidor utilizaremos as bibliotecas de conexão socket disponibilizadas e, desenvolvidas, especialmente para o desenvolvimento desse projeto de introdução a programação. Sua documentação pode ser encontrada em.
+        
             
             
     
