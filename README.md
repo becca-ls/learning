@@ -9,33 +9,33 @@ Ps: Viva o agronegócio.
 
 ## Funcionamento
 
-- Do jogo
-    1. Haverá uma determinada quantidade de tempo.
-    2. O jogo continua podendo ser jogado enquanto essa quantidade de tempo não é atingida ou enquanto ainda existe óleo.
-    3. Existem equipamentos de proteção para auxílio dos jogadores.
-    4. Existem equipamentos que atrapalham os jogadores.
+1. Do jogo
+    - Haverá uma determinada quantidade de tempo.
+    - O jogo continua podendo ser jogado enquanto essa quantidade de tempo não é atingida ou enquanto ainda existe óleo.
+    - Existem equipamentos de proteção para auxílio dos jogadores.
+    - Existem equipamentos que atrapalham os jogadores.
 
-- Do jogador
-    1. Jogadores terão uma quantidade de saúde.
-    2. A saúde pode ser diminuida devido a armadilhas do outro jogador ou por pisar em cima do oleo (prejudicando-a).
-    3. Jogadores podem plantar armadilhar para atingir outros jogadores. *ATENÇÃO: o jogador que colocou a armadilha também pode ser atingida pela mesma*.
-    4. Jogadores podem adquirir equipamentos de proteção e assim reduzir os danos durante a coleta.
+2. Do jogador
+    - Jogadores terão uma quantidade de saúde.
+    - A saúde pode ser diminuida devido a armadilhas do outro jogador ou por pisar em cima do oleo (prejudicando-a).
+    - Jogadores podem plantar armadilhar para atingir outros jogadores. *ATENÇÃO: o jogador que colocou a armadilha também pode ser atingido por ela*.
+    - Jogadores podem adquirir equipamentos de proteção e assim reduzir os danos durante a coleta.
 
 ## Tecnologias utilizadas
 
 Como é proposto pelo projeto serão utilizadas as tecnologias:
-- Biblioteca Allegro:
+1. Biblioteca Allegro:
     Biblioteca de interface gráfica c/c++ para desenvolvimento de jogos. tutoriais de auxílio podem ser encontrados nos sites a seguir.
     
-    1. [Rafael](https://rafaeltoledo.net/tutoriais-allegro-5/)
-    2. [IFSul](https://aprendendoallegro.tk/)
-    3. [Video Aulas](https://www.youtube.com/watch?v=IZ2krJ8Ls2A&list=PL6B459AAE1642C8B4)
+    - [Rafael](https://rafaeltoledo.net/tutoriais-allegro-5/)
+    - [IFSul](https://aprendendoallegro.tk/)
+    - [Video Aulas](https://www.youtube.com/watch?v=IZ2krJ8Ls2A&list=PL6B459AAE1642C8B4)
     
-- Cliente e servidor:
-    Para o cliente servidor utilizaremos as bibliotecas de conexão socket disponibilizadas e, desenvolvidas,especialmente para o desenvolvimento desse projeto de introdução a programação. Sua documentação pode ser encontrada em:
+2. Cliente e servidor:
+    Para o cliente servidor utilizaremos as bibliotecas de conexão socket disponibilizadas e, desenvolvidas, especialmente para o desenvolvimento desse projeto de introdução a programação. Sua documentação pode ser encontrada em:
     
-    1. [server.h](https://github.com/luucasv/projetoIP/blob/master/server-doc.md)
-    2. [client.h](https://github.com/luucasv/projetoIP/blob/master/client-doc.md)
+    - [server.h](https://github.com/luucasv/projetoIP/blob/master/server-doc.md)
+    - [client.h](https://github.com/luucasv/projetoIP/blob/master/client-doc.md)
 
         
             
