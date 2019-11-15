@@ -43,8 +43,9 @@ int main()
             {
                 recvMsgFromClient(clientes[id], id, WAIT_FOR_IT);
                 insereJogador(jogadores, clientes[id], id);
+                numJogadores++;
                 imprimeJogador(jogadores[id]);
-                strcpy(str_buffer, clientes[id]);
+                strcpy(str_buffer, jogadores[id].nick);
                 strcpy(str_buffer, " Conectou ao chat");
                 puts(str_buffer);
                 sendMsgToClient((Jogador *)&jogadores[id], sizeof(Jogador), id);
