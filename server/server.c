@@ -8,7 +8,7 @@
 #define BUFFER_SIZE (NICK_SIZE + 100)
 #define MAX_CLIENTS 2
 
-void insereJogador(Jogador *jogadores, char *nick, int id, int *numJogadores)
+void insereJogador(Jogador *jogadores, char *nick, int id, short *numJogadores)
 {
     //TODO adicionar o jogador ao vetor de jogadores
     Jogador e = iniciaJogador(nick, id);
@@ -25,11 +25,11 @@ void enviaInimigo(Jogador *jogadores, int totalJogadores)
         Jogador_inimigo inimigo;
         for (int i = 0; i < MAX_CLIENTS; i++)
         {
-            int aoCliente = 0 ? 1 : 0;
+            int id_cliente_inimigo = (i == 0 ? 1 : 0);
             inimigo.pos = jogadores[i].pos;
             inimigo.saude = jogadores[i].saude;
             strcpy(inimigo.nick, jogadores[i].nick);
-            sendMsgToClient((Jogador_inimigo *)&inimigo, sizeof(Jogador_inimigo), aoCliente);
+            sendMsgToClient((Jogador_inimigo *)&inimigo, sizeof(Jogador_inimigo), id_cliente_inimigo);
         }
     }
 }
@@ -59,12 +59,9 @@ int main()
             if (numJogadores < 2)
             {
                 recvMsgFromClient(clientes[id], id, WAIT_FOR_IT);
-                insereJogador(jogadores, clientes[id], id, numJogadores);
+                printf("%s conectou ao jogo\n", clientes[id]);
+                insereJogador(jogadores, clientes[id], id, &numJogadores);
                 imprimeJogador(jogadores[id]);
-
-                strcpy(str_buffer, jogadores[id].nick);
-                strcpy(str_buffer, " Conectou ao jogo");
-                puts(str_buffer);
                 sendMsgToClient((Jogador *)&jogadores[id], sizeof(Jogador), id);
             }
         }
@@ -80,9 +77,9 @@ int main()
         }
 
         enviaInimigo(jogadores, numJogadores);
-
+        
         //TODO resto do servidor
     }
-
+    free(jogadores);
     return 0;
 }

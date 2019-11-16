@@ -7,6 +7,12 @@
 
 #define MSG_MAX_SIZE 50
 
+
+void imprimeInimigo(Jogador_inimigo e)
+{
+    printf("%s %d (%d, %d)\n", e.nick, e.saude, e.pos.x, e.pos.y);
+}
+
 enum conn_ret_t criaConexao() {
     char end[MSG_MAX_SIZE];
     printf("Digite o ip do servidor\n");
@@ -52,6 +58,9 @@ int main() {
     conecta();
     recvMsgFromServer(&j, WAIT_FOR_IT);
     imprimeJogador(j);
+    Jogador_inimigo inimigo;
+    recvMsgFromServer(&inimigo, WAIT_FOR_IT);
+    imprimeInimigo(inimigo);
     while(1);
     return 0;
 }
