@@ -1,24 +1,26 @@
 #ifndef ENUM_H
 #define ENUM_H
 
-enum Acao {
+enum Acao
+{
     NENHUM,
     POSICAO,
     DANO,
     ACAO
 };
 
-enum Estado_jogo {
+enum Estado_jogo
+{
     PREJOGO,
     JOGANDO,
     POSJOGO
 };
 
-enum position{
+enum position
+{
     FREE_POS,
     OBSTACLE,
-    PLAYER;
-
-    }
+    PLAYER
+}
 
 #endif

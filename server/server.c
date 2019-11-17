@@ -81,11 +81,12 @@ int main()
 
         enviaInimigo(jogadores, numJogadores, &estado_jogo);
         
+        char id_movimento;
         while(estado_jogo == JOGANDO)
         {
-            //o jogo comeca aqui
-            puts("Entrei no jogo");
-            break;
+            
+            struct msg_ret_t tipo = recvMsg(&id_movimento);
+            //TODO TRATAR AS MENSAGENS RECEBIDAS
         }
 
         //TODO resto do servidor
