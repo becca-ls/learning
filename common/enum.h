@@ -14,4 +14,11 @@ enum Estado_jogo {
     POSJOGO
 };
 
+enum position{
+    FREE_POS,
+    OBSTACLE,
+    PLAYER;
+
+    }
+
 #endif
