@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "player.h"
+#include "enum.h"
 
 //Imprime as informações do jogador
 void imprimeJogador(Jogador j)

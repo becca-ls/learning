@@ -3,6 +3,8 @@
 
 #define NICK_SIZE 4
 
+
+
 typedef struct
 {
     int x, y;
@@ -11,6 +13,7 @@ typedef struct
 typedef struct
 {
     char nick[NICK_SIZE];
+    char tipo_movimento;
     Pos pos;
     char saude;
     char seguranca;

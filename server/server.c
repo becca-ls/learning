@@ -3,6 +3,7 @@
 #include <string.h>
 #include "server.h"
 #include "player.h"
+#include "enum.h"
 
 #define MSG_MAX_SIZE 350
 #define BUFFER_SIZE (NICK_SIZE + 100)
@@ -17,7 +18,7 @@ void insereJogador(Jogador *jogadores, char *nick, int id, short *numJogadores)
     return;
 }
 
-void enviaInimigo(Jogador *jogadores, int totalJogadores)
+void enviaInimigo(Jogador *jogadores, int totalJogadores, char *estado)
 {
     if (totalJogadores == MAX_CLIENTS)
     {
@@ -31,6 +32,8 @@ void enviaInimigo(Jogador *jogadores, int totalJogadores)
             strcpy(inimigo.nick, jogadores[i].nick);
             sendMsgToClient((Jogador_inimigo *)&inimigo, sizeof(Jogador_inimigo), id_cliente_inimigo);
         }
+
+        *estado = JOGANDO;
     }
 }
 
@@ -41,7 +44,7 @@ int main()
 
     //Matriz que armazena os clientes presente no jogo (Provavelmente desnecessaria)
     char clientes[MAX_CLIENTS][NICK_SIZE];
-
+    char estado_jogo = PREJOGO;
     //String auxiliar
     char str_buffer[BUFFER_SIZE];
 
@@ -76,8 +79,15 @@ int main()
                    msg_ret.client_id, msg_ret.client_id);
         }
 
-        enviaInimigo(jogadores, numJogadores);
+        enviaInimigo(jogadores, numJogadores, &estado_jogo);
         
+        while(estado_jogo == JOGANDO)
+        {
+            //o jogo comeca aqui
+            puts("Entrei no jogo");
+            break;
+        }
+
         //TODO resto do servidor
     }
     free(jogadores);
