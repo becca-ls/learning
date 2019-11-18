@@ -47,8 +47,8 @@ void wrongPlaceDude(Jogador *player, char damage){
 
 
 bool outOfBounds(int x, int y){
-    if(x<0 || x>=COLUMN) return true;
-    if(y<0 || y>=ROW) return true;
+    if(x<0 || x>=COLUNA) return true;
+    if(y<0 || y>=LINHA) return true;
     return false;
 }
 
