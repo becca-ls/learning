@@ -5,6 +5,7 @@
 #define BAIXO 's'
 #define ESQ 'a'
 #define DIR 'd'
+
 enum Acao
 {
     NENHUM,

@@ -43,21 +43,25 @@ void moveJogador(Jogador *jogador, char id_movimento)
     if (id_movimento == CIMA)
     {
         //MEXE PRA CIMA
+        jogador->tipo_movimento = POSICAO;
         jogador->pos.y -= 1;
     }
     else if (id_movimento == BAIXO)
-        //move para baixo;
     {
+        //move para baixo;
+        jogador->tipo_movimento = POSICAO;
         jogador->pos.y +=1;
     }
     else if (id_movimento == ESQ)
     {
         //move para esquerda
+        jogador->tipo_movimento = POSICAO;
         jogador->pos.x -=1;
     }
     else if (id_movimento == DIR)
     {
         //move para direita
+        jogador->tipo_movimento = POSICAO;
         jogador->pos.x +=1;
     }
 }
@@ -69,7 +73,9 @@ int main()
 
     //Matriz que armazena os clientes presente no jogo (Provavelmente desnecessaria)
     char clientes[MAX_CLIENTS][NICK_SIZE];
+    
     char estado_jogo = PREJOGO;
+    
     //String auxiliar
     char str_buffer[BUFFER_SIZE];
 
@@ -115,8 +121,8 @@ int main()
             {
                 moveJogador(&jogadores[msg_ret.client_id], id_movimento);
                 broadcast((Jogador *)&jogadores[msg_ret.client_id], sizeof(Jogador));
+                //TODO TRATAR AS MENSAGENS RECEBIDAS
             }
-            //TODO TRATAR AS MENSAGENS RECEBIDAS
         }
 
         //TODO resto do servidor
