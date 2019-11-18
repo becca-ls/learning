@@ -7,6 +7,7 @@
 #define BAIXO 's'
 #define ESQ 'a'
 #define DIR 'd'
+#define NUMBER_OF_STAINS 20
 
 enum Acao
 {

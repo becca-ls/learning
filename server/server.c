@@ -5,10 +5,28 @@
 #include "server.h"
 #include "player.h"
 #include "core.h"
+#include <time.h>
 
 #define MSG_MAX_SIZE 350
 #define BUFFER_SIZE (NICK_SIZE + 100)
 #define MAX_CLIENTS 2
+
+void generateOilStain(int **matrix){
+    
+    int stains = NUMBER_OF_STAINS;
+    
+    // Gerando um numero aleatório
+    srand(time(NULL));
+    while(stains>0)
+    int y = rand()%LINHA;
+    int x = rand()%COLUNA;
+    if (matrix[y][x] == FREE_POS){
+        matrix[y][x] = OIL_STAIN;
+        stains--;
+    }
+
+}
+
 
 void insereJogador(Jogador *jogadores, char *nick, int id, short *numJogadores)
 {
@@ -151,7 +169,12 @@ void takeAnAction(int **matrix, Jogador *player, char tipo_movimento){
 
 int main()
 {
+    //Matriz do jogo
     int **grid = NULL;
+
+    //Gera as manchas de oleo na matriz
+    generateOilStain(grid);
+
     //Vetor que armazena os jogadores no jogo
     Jogador *jogadores = (Jogador *)malloc(MAX_CLIENTS * sizeof(Jogador));
 
