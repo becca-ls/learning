@@ -18,6 +18,7 @@ typedef struct
     char saude;
     char seguranca;
     int id;
+    int oleo_coletado;
 
     //TODO definir jogador resto do que precisa do jogador
 } Jogador;

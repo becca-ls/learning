@@ -37,32 +37,114 @@ void enviaInimigo(Jogador *jogadores, int totalJogadores, char *estado)
     }
 }
 
-void moveJogador(Jogador *jogador, char id_movimento)
-{
+void wrongPlaceDude(Jogador *player, char damage){               
+    switch(damage){
+        case OIL_STAIN:
+            player->saude = player->saude - 20; //Valor a ser definido, 20 eh o exemplo
+            break;
+    }
+}
 
-    if (id_movimento == CIMA)
-    {
-        //MEXE PRA CIMA
-        jogador->tipo_movimento = POSICAO;
-        jogador->pos.y -= 1;
+
+bool outOfBounds(int x, int y){
+    if(x<0 || x>=COLUMN) return true;
+    if(y<0 || y>=ROW) return true;
+    return false;
+}
+
+void Catch(int **matrix, Jogador *player){
+    switch(player.face){
+        case CIMA:
+            if(outOfBounds((*player).pos.x, (*player).pos.y-1) == false && matrix[(*player).pos.x][(*player).pos.y - 1] == OIL_STAIN){
+                matrix[(*player).pos.x][(*player).pos.y-1] = FREE_POS;
+                player->oleo_coletado++;
+            }
+            break;
+        case BAIXO:
+            if(outOfBounds((*player).pos.x, (*player).pos.y+1) == false && matrix[(*player).pos.x][(*player).pos.y+1] == OIL_STAIN){
+                matrix[(*player).pos.x][(*player).pos.y+1] = FREE_POS;
+                player->oleo_coletado++;
+            }
+            break;
+        case ESQ:
+            if(outOfBounds((*player).pos.x-1, (*player).pos.y) == false && matrix[(*player).pos.x-1][(*player).pos.y] == OIL_STAIN){
+                matrix[(*player).pos.x-1][(*player).pos.y] = FREE_POS;
+                player->oleo_coletado++;
+            }
+            break;
+        case DIR:
+            if(outOfBounds((*player).pos.x+1, (*player).pos.y) == false && matrix[(*player).pos.x+1][(*player).pos.y] == OIL_STAIN){
+                matrix[(*player).pos.x+1][(*player).pos.y] = FREE_POS;
+                player->oleo_coletado++;
+            }
+            break;
     }
-    else if (id_movimento == BAIXO)
-    {
-        //move para baixo;
-        jogador->tipo_movimento = POSICAO;
-        jogador->pos.y +=1;
+}
+
+bool checkCollision(int** matrix,char command, Jogador *player){
+
+    switch(command){
+        case 'w':
+            player->face = UP;
+            if( outOfBounds((*player).pos.x,(*player).pos.y-1) == true || matrix[(*player).pos.y-1][(*player).pos.x] == OBSTACLE || matrix[(*player).pos.y-1][(*player).pos.x] == PLAYER ) return true;
+            return false;
+            break;
+        case 's':
+            player->face = DOWN;
+            if( outOfBounds((*player).pos.x,(*player).pos.y+1) == true || matrix[(*player).pos.y+1][(*player).pos.x] == OBSTACLE || matrix[(*player).pos.y+1][(*player).pos.x] == PLAYER ) return true;
+            return false;
+            break;
+        case 'd':
+            player->face = RIGHT;
+            if( outOfBounds((*player).pos.x+1,(*player).pos.y) == true || matrix[(*player).pos.y][(*player).pos.x+1] == OBSTACLE || matrix[(*player).pos.y][(*player).pos.x+1] == PLAYER ) return true;
+            return false;
+            break;
+        case 'a':
+            player->face = LEFT;
+            if( outOfBounds((*player).pos.x-1,(*player).pos.y) == true || matrix[(*player).pos.y][(*player).pos.x-1] == OBSTACLE || matrix[(*player).pos.y][(*player).pos.x-1] == PLAYER ) return true;
+            return false;
+            break;
+        default
+            return true; //Invalid command
     }
-    else if (id_movimento == ESQ)
-    {
-        //move para esquerda
-        jogador->tipo_movimento = POSICAO;
-        jogador->pos.x -=1;
-    }
-    else if (id_movimento == DIR)
-    {
-        //move para direita
-        jogador->tipo_movimento = POSICAO;
-        jogador->pos.x +=1;
+
+}
+
+void takeAnAction(int**matrix, Jogador *player, char tipo_movimento){
+    player.tipo_movimento = tipo_movimento;
+    switch(tipo_movimento){
+        case CIMA:
+            if(checkCollision(matrix,CIMA, *player) == false){
+                matrix[(*player).pos.y][(*player).pos.x] = FREE_POS;
+                player->pos.y = player->pos.y -1;
+                if(matrix[(*player).pos.y][(*player).pos.x]== OIL_STAIN) wrongPlaceDude(*player, OIL_STAIN);
+            }
+            break;
+        case BAIXO:
+            if(checkCollision(matrix,BAIXO, *player) == false){
+                matrix[(*player).pos.y][(*player).pos.x] = FREE_POS;
+                player->pos.y = player->pos.y +1;
+                if(matrix[(*player).pos.y][(*player).pos.x]== OIL_STAIN) wrongPlaceDude(*player, OIL_STAIN);
+            }
+            break;
+        case ESQ:
+            if(checkCollision(matrix,ESQ, *player) == false){
+                matrix[(*player).pos.y][(*player).pos.x] = FREE_POS;
+                player->pos.x = player->pos.x -1;
+                if(matrix[(*player).pos.y][(*player).pos.x]== OIL_STAIN) wrongPlaceDude(*player, OIL_STAIN);
+            }
+            break;
+        case DIR:
+            if(checkCollision(matrix,DIR, *player) == false){
+                matrix[(*player).pos.y][(*player).pos.x] = FREE_POS;
+                player->pos.x = player->pos.x + 1;
+                if(matrix[(*player).pos.y][(*player).pos.x]== OIL_STAIN) wrongPlaceDude(*player, OIL_STAIN);
+            }
+            break;
+        case ACAO:
+            Catch(matrix, *player);
+        break;
+        player->tipo_movimento = NENHUM;
     }
 }
 
@@ -119,7 +201,7 @@ int main()
             struct msg_ret_t msg_ret = recvMsg(&id_movimento);
             if (msg_ret.status == MESSAGE_OK)
             {
-                moveJogador(&jogadores[msg_ret.client_id], id_movimento);
+                takeAnAction(--MATRIZ A SER INSERIDA-- ,&jogadores[msg_ret.client_id], id_movimento);
                 broadcast((Jogador *)&jogadores[msg_ret.client_id], sizeof(Jogador));
                 //TODO TRATAR AS MENSAGENS RECEBIDAS
             }
