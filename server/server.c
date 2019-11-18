@@ -37,10 +37,35 @@ void enviaInimigo(Jogador *jogadores, int totalJogadores, char *estado)
     }
 }
 
+void moveJogador(Jogador *jogador, char id_movimento)
+{
+
+    if (id_movimento == CIMA)
+    {
+        //MEXE PRA CIMA
+        jogador->pos.y -= 1;
+    }
+    else if (id_movimento == BAIXO)
+        //move para baixo;
+    {
+        jogador->pos.y +=1;
+    }
+    else if (id_movimento == ESQ)
+    {
+        //move para esquerda
+        jogador->pos.x -=1;
+    }
+    else if (id_movimento == DIR)
+    {
+        //move para direita
+        jogador->pos.x +=1;
+    }
+}
+
 int main()
 {
     //Vetor que armazena os jogadores no jogo
-    Jogador *jogadores = (Jogador *)malloc(MAX_CLIENTS*sizeof(Jogador));
+    Jogador *jogadores = (Jogador *)malloc(MAX_CLIENTS * sizeof(Jogador));
 
     //Matriz que armazena os clientes presente no jogo (Provavelmente desnecessaria)
     char clientes[MAX_CLIENTS][NICK_SIZE];
@@ -80,31 +105,16 @@ int main()
         }
 
         enviaInimigo(jogadores, numJogadores, &estado_jogo);
-        
+
         char id_movimento;
-        while(estado_jogo == JOGANDO)
+        while (estado_jogo == JOGANDO)
         {
-            
+
             struct msg_ret_t msg_ret = recvMsg(&id_movimento);
-            if(msg_ret.status == MESSAGE_OK)
+            if (msg_ret.status == MESSAGE_OK)
             {
-                if(id_movimento == CIMA)
-                {
-                    jogadores[msg_ret.client_id].pos.y -=1;
-                    //MEXE PRA CIMA
-                } 
-                else if(id_movimento == BAIXO)
-                {
-                    //move para baixo;
-                }
-                else if(id_movimento == ESQ)
-                {
-                    //move para esquerda
-                }
-                else if(id_movimento == DIR)
-                {
-                    //move para direita
-                }
+                moveJogador(&jogadores[msg_ret.client_id], id_movimento);
+                broadcast((Jogador *)&jogadores[msg_ret.client_id], sizeof(Jogador));
             }
             //TODO TRATAR AS MENSAGENS RECEBIDAS
         }
