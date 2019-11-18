@@ -56,6 +56,7 @@ void conecta() {
 int main() {
     Jogador j;
     conecta();
+    printf("Edicao rafinha\n");
     recvMsgFromServer(&j, WAIT_FOR_IT);
     imprimeJogador(j);
     Jogador_inimigo inimigo;
