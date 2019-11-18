@@ -84,23 +84,23 @@ void Catch(int **matrix, Jogador *player){
 bool checkCollision(int** matrix,char command, Jogador *player){
 
     switch(command){
-        case 'w':
-            player->face = UP;
+        case CIMA:
+            player->face = CIMA;
             if( outOfBounds((*player).pos.x,(*player).pos.y-1) == true || matrix[(*player).pos.y-1][(*player).pos.x] == OBSTACLE || matrix[(*player).pos.y-1][(*player).pos.x] == PLAYER ) return true;
             return false;
             break;
-        case 's':
-            player->face = DOWN;
+        case BAIXO:
+            player->face = BAIXO;
             if( outOfBounds((*player).pos.x,(*player).pos.y+1) == true || matrix[(*player).pos.y+1][(*player).pos.x] == OBSTACLE || matrix[(*player).pos.y+1][(*player).pos.x] == PLAYER ) return true;
             return false;
             break;
-        case 'd':
-            player->face = RIGHT;
+        case DIR:
+            player->face = DIR;
             if( outOfBounds((*player).pos.x+1,(*player).pos.y) == true || matrix[(*player).pos.y][(*player).pos.x+1] == OBSTACLE || matrix[(*player).pos.y][(*player).pos.x+1] == PLAYER ) return true;
             return false;
             break;
-        case 'a':
-            player->face = LEFT;
+        case ESQ:
+            player->face = ESQ;
             if( outOfBounds((*player).pos.x-1,(*player).pos.y) == true || matrix[(*player).pos.y][(*player).pos.x-1] == OBSTACLE || matrix[(*player).pos.y][(*player).pos.x-1] == PLAYER ) return true;
             return false;
             break;
