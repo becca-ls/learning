@@ -1,5 +1,5 @@
 # client code directory name
-CLIENTDIR := tests/serverResetTest/client
+CLIENTDIR := client
 
 # server code directory name
 SERVERDIR := server
