@@ -17,12 +17,13 @@ void generateOilStain(int **matrix){
     
     // Gerando um numero aleatório
     srand(time(NULL));
-    while(stains>0)
-    int y = rand()%LINHA;
-    int x = rand()%COLUNA;
-    if (matrix[y][x] == FREE_POS){
-        matrix[y][x] = OIL_STAIN;
-        stains--;
+    while(stains>0){
+        int y = rand()%LINHA;
+        int x = rand()%COLUNA;
+        if (matrix[y][x] == FREE_POS){
+            matrix[y][x] = OIL_STAIN;
+            stains--;
+        }
     }
 
 }
