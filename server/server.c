@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include "server.h"
 #include "player.h"
 #include "core.h"
@@ -53,7 +54,7 @@ bool outOfBounds(int x, int y){
 }
 
 void Catch(int **matrix, Jogador *player){
-    switch(player.face){
+    switch(player->face){
         case CIMA:
             if(outOfBounds((*player).pos.x, (*player).pos.y-1) == false && matrix[(*player).pos.x][(*player).pos.y - 1] == OIL_STAIN){
                 matrix[(*player).pos.x][(*player).pos.y-1] = FREE_POS;
@@ -104,45 +105,45 @@ bool checkCollision(int** matrix,char command, Jogador *player){
             if( outOfBounds((*player).pos.x-1,(*player).pos.y) == true || matrix[(*player).pos.y][(*player).pos.x-1] == OBSTACLE || matrix[(*player).pos.y][(*player).pos.x-1] == PLAYER ) return true;
             return false;
             break;
-        default
+        default:
             return true; //Invalid command
     }
 
 }
 
-void takeAnAction(int**matrix, Jogador *player, char tipo_movimento){
-    player.tipo_movimento = tipo_movimento;
+void takeAnAction(int **matrix, Jogador *player, char tipo_movimento){
+    player->tipo_movimento = tipo_movimento;
     switch(tipo_movimento){
         case CIMA:
-            if(checkCollision(matrix,CIMA, *player) == false){
+            if(checkCollision(matrix,CIMA, player) == false){
                 matrix[(*player).pos.y][(*player).pos.x] = FREE_POS;
                 player->pos.y = player->pos.y -1;
-                if(matrix[(*player).pos.y][(*player).pos.x]== OIL_STAIN) wrongPlaceDude(*player, OIL_STAIN);
+                if(matrix[(*player).pos.y][(*player).pos.x]== OIL_STAIN) wrongPlaceDude(player, OIL_STAIN);
             }
             break;
         case BAIXO:
-            if(checkCollision(matrix,BAIXO, *player) == false){
+            if(checkCollision(matrix,BAIXO, player) == false){
                 matrix[(*player).pos.y][(*player).pos.x] = FREE_POS;
                 player->pos.y = player->pos.y +1;
-                if(matrix[(*player).pos.y][(*player).pos.x]== OIL_STAIN) wrongPlaceDude(*player, OIL_STAIN);
+                if(matrix[(*player).pos.y][(*player).pos.x]== OIL_STAIN) wrongPlaceDude(player, OIL_STAIN);
             }
             break;
         case ESQ:
-            if(checkCollision(matrix,ESQ, *player) == false){
+            if(checkCollision(matrix,ESQ, player) == false){
                 matrix[(*player).pos.y][(*player).pos.x] = FREE_POS;
                 player->pos.x = player->pos.x -1;
-                if(matrix[(*player).pos.y][(*player).pos.x]== OIL_STAIN) wrongPlaceDude(*player, OIL_STAIN);
+                if(matrix[(*player).pos.y][(*player).pos.x]== OIL_STAIN) wrongPlaceDude(player, OIL_STAIN);
             }
             break;
         case DIR:
-            if(checkCollision(matrix,DIR, *player) == false){
+            if(checkCollision(matrix,DIR, player) == false){
                 matrix[(*player).pos.y][(*player).pos.x] = FREE_POS;
                 player->pos.x = player->pos.x + 1;
-                if(matrix[(*player).pos.y][(*player).pos.x]== OIL_STAIN) wrongPlaceDude(*player, OIL_STAIN);
+                if(matrix[(*player).pos.y][(*player).pos.x]== OIL_STAIN) wrongPlaceDude(player, OIL_STAIN);
             }
             break;
         case ACAO:
-            Catch(matrix, *player);
+            Catch(matrix, player);
         break;
         player->tipo_movimento = NENHUM;
     }
@@ -150,6 +151,7 @@ void takeAnAction(int**matrix, Jogador *player, char tipo_movimento){
 
 int main()
 {
+    int **grid = NULL;
     //Vetor que armazena os jogadores no jogo
     Jogador *jogadores = (Jogador *)malloc(MAX_CLIENTS * sizeof(Jogador));
 
@@ -201,7 +203,7 @@ int main()
             struct msg_ret_t msg_ret = recvMsg(&id_movimento);
             if (msg_ret.status == MESSAGE_OK)
             {
-                takeAnAction(--MATRIZ A SER INSERIDA-- ,&jogadores[msg_ret.client_id], id_movimento);
+                takeAnAction(grid,&jogadores[msg_ret.client_id], id_movimento);
                 broadcast((Jogador *)&jogadores[msg_ret.client_id], sizeof(Jogador));
                 //TODO TRATAR AS MENSAGENS RECEBIDAS
             }

@@ -13,6 +13,7 @@ typedef struct
 typedef struct
 {
     char nick[NICK_SIZE];
+    char face;
     char tipo_movimento;
     Pos pos;
     char saude;
