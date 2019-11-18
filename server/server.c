@@ -3,7 +3,7 @@
 #include <string.h>
 #include "server.h"
 #include "player.h"
-#include "enum.h"
+#include "core.h"
 
 #define MSG_MAX_SIZE 350
 #define BUFFER_SIZE (NICK_SIZE + 100)
@@ -85,7 +85,27 @@ int main()
         while(estado_jogo == JOGANDO)
         {
             
-            struct msg_ret_t tipo = recvMsg(&id_movimento);
+            struct msg_ret_t msg_ret = recvMsg(&id_movimento);
+            if(msg_ret.status == MESSAGE_OK)
+            {
+                if(id_movimento == CIMA)
+                {
+                    jogadores[msg_ret.client_id].pos.y -=1;
+                    //MEXE PRA CIMA
+                } 
+                else if(id_movimento == BAIXO)
+                {
+                    //move para baixo;
+                }
+                else if(id_movimento == ESQ)
+                {
+                    //move para esquerda
+                }
+                else if(id_movimento == DIR)
+                {
+                    //move para direita
+                }
+            }
             //TODO TRATAR AS MENSAGENS RECEBIDAS
         }
 

@@ -1,6 +1,10 @@
 #ifndef ENUM_H
 #define ENUM_H
 
+#define CIMA 'w'
+#define BAIXO 's'
+#define ESQ 'a'
+#define DIR 'd'
 enum Acao
 {
     NENHUM,
@@ -20,7 +24,8 @@ enum position
 {
     FREE_POS,
     OBSTACLE,
-    PLAYER
-}
+    PLAYER,
+    OIL_STAIN
+};
 
 #endif
