@@ -24,13 +24,6 @@ typedef struct
     //TODO definir jogador resto do que precisa do jogador
 } Jogador;
 
-typedef struct 
-{
-    char nick[NICK_SIZE];
-    Pos pos;
-    char saude;
-} Jogador_inimigo;
-
 
 Jogador iniciaJogador(char *nick, int id);
 
