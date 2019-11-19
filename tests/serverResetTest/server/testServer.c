@@ -53,11 +53,11 @@ void enviaInimigo(Jogador *jogadores, int totalJogadores, char *estado)
   if (totalJogadores == MAX_CLIENTS)
   {
     //TODO envia dados do inimigo ao cliente
-    Jogador inimigo;
     for (int i = 0; i < MAX_CLIENTS; i++)
     {
       int id_cliente_inimigo = (i == 0 ? 1 : 0);
-      sendMsgToClient((Jogador *)&inimigo, sizeof(Jogador), id_cliente_inimigo);
+      imprimeJogador(jogadores[i]);
+      sendMsgToClient((Jogador *)&jogadores[i], sizeof(Jogador), id_cliente_inimigo);
     }
 
     *estado = JOGANDO;

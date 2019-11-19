@@ -9,13 +9,8 @@
 
 #define MSG_MAX_SIZE 50
 
-
-void imprimeInimigo(Jogador_inimigo e)
+enum conn_ret_t criaConexao()
 {
-    printf("%s %d (%d, %d)\n", e.nick, e.saude, e.pos.x, e.pos.y);
-}
-
-enum conn_ret_t criaConexao() {
     char end[MSG_MAX_SIZE];
     printf("Digite o ip do servidor\n");
     scanf(" %s", end);
@@ -23,48 +18,52 @@ enum conn_ret_t criaConexao() {
     return connectToServer(end);
 }
 
-void conecta() {
+void conecta()
+{
 
     enum conn_ret_t con = criaConexao();
-    
-    while(con != SERVER_UP) {
+
+    while (con != SERVER_UP)
+    {
         puts("Problema na conexao");
         int flag;
         flag = tolower(getchar());
-        while(flag != 'n' && flag != 'y'){
+        while (flag != 'n' && flag != 'y')
+        {
             puts("Digita de novo");
             flag = tolower(getchar());
         }
 
-        if(flag == 'n')
+        if (flag == 'n')
             exit(EXIT_SUCCESS);
-        else 
+        else
             con = criaConexao();
     }
 
     char nick[NICK_SIZE + 4];
-    
-    printf("Digite um nick com %d caracteres: \n", NICK_SIZE-1);
+
+    printf("Digite um nick com %d caracteres: \n", NICK_SIZE - 1);
     scanf("%s", nick);
-    
-    while((int)strlen(nick) > 3) {
-        printf("Digite um nick com %d caracteres: \n", NICK_SIZE-1);
+
+    while ((int)strlen(nick) > 3)
+    {
+        printf("Digite um nick com %d caracteres: \n", NICK_SIZE - 1);
         scanf(" %s", nick);
     }
 
-    sendMsgToServer(nick, (int)strlen(nick)+1);
+    sendMsgToServer(nick, (int)strlen(nick) + 1);
 }
 
-int main() {
-    Jogador j;
+int main()
+{
+    Jogador j, inimigo;
     Jogador aux;
     conecta();
     recvMsgFromServer(&j, WAIT_FOR_IT);
     imprimeJogador(j);
-    Jogador_inimigo inimigo;
     recvMsgFromServer(&inimigo, WAIT_FOR_IT);
-    imprimeInimigo(inimigo);
-    while(1)
+    imprimeJogador(inimigo);
+    while (1)
     {
         char c = getch();
         switch (c)
@@ -79,7 +78,6 @@ int main() {
             break;
         }
         recvMsgFromServer(&aux, DONT_WAIT);
-        
         imprimeJogador(aux);
     }
     return 0;
