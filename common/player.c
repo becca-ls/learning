@@ -19,8 +19,8 @@ Jogador iniciaJogador(char *nick, int id)
     e.seguranca = 0;
     e.id = id;
     strcpy(e.nick, nick);
-    e.pos.x = 10;
-    e.pos.y = 10;
+    e.pos.x = 3;
+    e.pos.y = 2;
     e.oleo_coletado = 0;
 
     return e;

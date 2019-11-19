@@ -1,8 +1,8 @@
 #ifndef ENUM_H
 #define ENUM_H
 
-#define LINHA 10
-#define COLUNA 10
+#define LINHA 12
+#define COLUNA 33
 #define CIMA 'w'
 #define BAIXO 's'
 #define ESQ 'a'

@@ -79,6 +79,7 @@ int main() {
             break;
         }
         recvMsgFromServer(&aux, DONT_WAIT);
+        
         imprimeJogador(aux);
     }
     return 0;

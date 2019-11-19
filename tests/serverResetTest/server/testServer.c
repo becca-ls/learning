@@ -11,6 +11,34 @@
 #define BUFFER_SIZE (NICK_SIZE + 100)
 #define MAX_CLIENTS 2
 
+int** readGrid(){
+    
+    int i,j, aux;
+    FILE *f = NULL;
+    char auxi;
+    int ** matrix;
+
+    //Alocando memória
+    matrix = (int**) malloc( LINHA*(sizeof(int*)) );
+    for(i=0; i<LINHA;i++){
+        matrix[i] = (int*) malloc(COLUNA*(sizeof(int)));
+    }
+    //Abrindo o arquivo de texto
+    f = fopen("map.txt", "r"); //Por obséquio coloquem "map.txt" na msm pasta do server ou mudem o path
+    if(f == NULL) {puts("ta nulo cuzao"); exit(1);}
+    for(i=0;i<LINHA;i++){
+        for(j=0;j<COLUNA;j++){
+            //Procedimento para salvar um inteiro em vez de um char;
+            fscanf(f, " %c", &auxi);
+            aux = auxi - '0'; 
+            matrix[i][j]= aux;
+        }
+    }
+    //fechando o f
+    fclose(f);
+    return matrix;
+}
+
 void insereJogador(Jogador *jogadores, char *nick, int id, short *numJogadores)
 {
   //TODO adicionar o jogador ao vetor de jogadores
@@ -39,24 +67,116 @@ void enviaInimigo(Jogador *jogadores, int totalJogadores, char *estado)
   }
 }
 
-void moveJogador(Jogador *p, char id_movimento)
-{
-  if (id_movimento == CIMA)
-  {
-    p->pos.y -= 1;
-  }
-  else if (id_movimento == BAIXO)
-  {
-    p->pos.y += 1;
-  }
-  else if (id_movimento == ESQ)
-  {
-    p->pos.x -= 1;
-  }
-  else if (id_movimento == DIR)
-  {
-    p->pos.x += 1;
-  }
+
+void wrongPlaceDude(Jogador *player, char damage){               
+    switch(damage){
+        case OIL_STAIN:
+            player->saude = player->saude - 20; //Valor a ser definido, 20 eh o exemplo
+            break;
+    }
+}
+
+
+bool outOfBounds(int x, int y){
+    if(x<0 || x>=COLUNA) return true;
+    if(y<0 || y>=LINHA) return true;
+    return false;
+}
+
+void Catch(int **matrix, Jogador *player){
+    switch(player->face){
+        case CIMA:
+            if(outOfBounds((*player).pos.x, (*player).pos.y-1) == false && matrix[(*player).pos.x][(*player).pos.y - 1] == OIL_STAIN){
+                matrix[(*player).pos.x][(*player).pos.y-1] = FREE_POS;
+                player->oleo_coletado++;
+            }
+            break;
+        case BAIXO:
+            if(outOfBounds((*player).pos.x, (*player).pos.y+1) == false && matrix[(*player).pos.x][(*player).pos.y+1] == OIL_STAIN){
+                matrix[(*player).pos.x][(*player).pos.y+1] = FREE_POS;
+                player->oleo_coletado++;
+            }
+            break;
+        case ESQ:
+            if(outOfBounds((*player).pos.x-1, (*player).pos.y) == false && matrix[(*player).pos.x-1][(*player).pos.y] == OIL_STAIN){
+                matrix[(*player).pos.x-1][(*player).pos.y] = FREE_POS;
+                player->oleo_coletado++;
+            }
+            break;
+        case DIR:
+            if(outOfBounds((*player).pos.x+1, (*player).pos.y) == false && matrix[(*player).pos.x+1][(*player).pos.y] == OIL_STAIN){
+                matrix[(*player).pos.x+1][(*player).pos.y] = FREE_POS;
+                player->oleo_coletado++;
+            }
+            break;
+    }
+}
+
+bool checkCollision(int** matrix,char command, Jogador *player){
+
+    switch(command){
+        case CIMA:
+            player->face = CIMA;
+            if( outOfBounds((*player).pos.x,(*player).pos.y-1) == true || matrix[(*player).pos.y-1][(*player).pos.x] == OBSTACLE || matrix[(*player).pos.y-1][(*player).pos.x] == PLAYER ) return true;
+            return false;
+            break;
+        case BAIXO:
+            player->face = BAIXO;
+            if( outOfBounds((*player).pos.x,(*player).pos.y+1) == true || matrix[(*player).pos.y+1][(*player).pos.x] == OBSTACLE || matrix[(*player).pos.y+1][(*player).pos.x] == PLAYER ) return true;
+            return false;
+            break;
+        case DIR:
+            player->face = DIR;
+            if( outOfBounds((*player).pos.x+1,(*player).pos.y) == true || matrix[(*player).pos.y][(*player).pos.x+1] == OBSTACLE || matrix[(*player).pos.y][(*player).pos.x+1] == PLAYER ) return true;
+            return false;
+            break;
+        case ESQ:
+            player->face = ESQ;
+            if( outOfBounds((*player).pos.x-1,(*player).pos.y) == true || matrix[(*player).pos.y][(*player).pos.x-1] == OBSTACLE || matrix[(*player).pos.y][(*player).pos.x-1] == PLAYER ) return true;
+            return false;
+            break;
+        default:
+            return true; //Invalid command
+    }
+
+}
+
+void takeAnAction(int **matrix, Jogador *player, char tipo_movimento){
+    player->tipo_movimento = tipo_movimento;
+    switch(tipo_movimento){
+        case CIMA:
+            if(checkCollision(matrix,CIMA, player) == false){
+                matrix[(*player).pos.y][(*player).pos.x] = FREE_POS;
+                player->pos.y = player->pos.y -1;
+                if(matrix[(*player).pos.y][(*player).pos.x]== OIL_STAIN) wrongPlaceDude(player, OIL_STAIN);
+            }
+            break;
+        case BAIXO:
+            if(checkCollision(matrix,BAIXO, player) == false){
+                matrix[(*player).pos.y][(*player).pos.x] = FREE_POS;
+                player->pos.y = player->pos.y +1;
+                if(matrix[(*player).pos.y][(*player).pos.x]== OIL_STAIN) wrongPlaceDude(player, OIL_STAIN);
+            }
+            break;
+        case ESQ:
+            if(checkCollision(matrix,ESQ, player) == false){
+                matrix[(*player).pos.y][(*player).pos.x] = FREE_POS;
+                player->pos.x = player->pos.x -1;
+                if(matrix[(*player).pos.y][(*player).pos.x]== OIL_STAIN) wrongPlaceDude(player, OIL_STAIN);
+            }
+            break;
+        case DIR:
+            if(checkCollision(matrix,DIR, player) == false){
+                matrix[(*player).pos.y][(*player).pos.x] = FREE_POS;
+                player->pos.x = player->pos.x + 1;
+                if(matrix[(*player).pos.y][(*player).pos.x]== OIL_STAIN) wrongPlaceDude(player, OIL_STAIN);
+            }
+            break;
+        case ACAO:
+            Catch(matrix, player);
+        break;
+        player->tipo_movimento = NENHUM;
+    }
 }
 
 int main()
@@ -65,7 +185,7 @@ int main()
   int **grid = NULL;
 
   //Le o arquivo "map.txt" e aloca em grid
-  //grid = readGrid();
+  grid = readGrid();
 
   //Gera as manchas de oleo na matriz
   //generateOilStain(grid);
@@ -121,7 +241,7 @@ int main()
       struct msg_ret_t msg_ret = recvMsg(&id_movimento);
       if (msg_ret.status == MESSAGE_OK)
       {
-        moveJogador(&jogadores[msg_ret.client_id], id_movimento);
+        takeAnAction(grid, &jogadores[msg_ret.client_id], id_movimento);
         broadcast((Jogador *)&jogadores[msg_ret.client_id], sizeof(Jogador));
         //TODO TRATAR AS MENSAGENS RECEBIDAS
       }
