@@ -59,7 +59,6 @@ int main() {
     Jogador j;
     Jogador aux;
     conecta();
-    printf("Edicao rafinha\n");
     recvMsgFromServer(&j, WAIT_FOR_IT);
     imprimeJogador(j);
     Jogador_inimigo inimigo;
@@ -81,8 +80,6 @@ int main() {
         }
         recvMsgFromServer(&aux, DONT_WAIT);
         imprimeJogador(aux);
-        sleep(1);
-
     }
     return 0;
 }
