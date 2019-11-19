@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <unistd.h>
+#include "core.h"
 #include "client.h"
 #include "player.h"
 
@@ -55,6 +57,7 @@ void conecta() {
 
 int main() {
     Jogador j;
+    Jogador aux;
     conecta();
     printf("Edicao rafinha\n");
     recvMsgFromServer(&j, WAIT_FOR_IT);
@@ -62,6 +65,24 @@ int main() {
     Jogador_inimigo inimigo;
     recvMsgFromServer(&inimigo, WAIT_FOR_IT);
     imprimeInimigo(inimigo);
-    while(1);
+    while(1)
+    {
+        char c = getch();
+        switch (c)
+        {
+        case CIMA:
+        case BAIXO:
+        case ESQ:
+        case DIR:
+            sendMsgToServer((char *)&c, sizeof(char));
+            break;
+        default:
+            break;
+        }
+        recvMsgFromServer(&aux, DONT_WAIT);
+        imprimeJogador(aux);
+        sleep(1);
+
+    }
     return 0;
 }

@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <time.h>
 #include "server.h"
 #include "player.h"
 #include "core.h"
-#include <time.h>
 
 #define MSG_MAX_SIZE 350
 #define BUFFER_SIZE (NICK_SIZE + 100)
@@ -213,7 +213,7 @@ int main()
     grid = readGrid();
 
     //Gera as manchas de oleo na matriz
-    generateOilStain(grid);
+    //generateOilStain(grid);
 
     //Vetor que armazena os jogadores no jogo
     Jogador *jogadores = (Jogador *)malloc(MAX_CLIENTS * sizeof(Jogador));
