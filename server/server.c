@@ -28,6 +28,42 @@ void generateOilStain(int **matrix){
 
 }
 
+int** readGrid(){
+    
+    int i,j, aux;
+    FILE *f;
+    char auxi;
+    int ** matrix;
+
+    //Alocando memória
+    matrix = (int**) malloc( LINHA*(sizeof(int*)) );
+    for(i=0; i<LINHA;i++){
+        matrix[i] = (int*) malloc(COLUNA*(sizeof(int)));
+    }
+    //Abrindo o arquivo de texto
+    f = fopen("map.txt", "r"); //Por obséquio coloquem "map.txt" na msm pasta do server ou mudem o path
+    for(i=0;i<LINHA;i++){
+        for(j=0;j<COLUNA;j++){
+            //Procedimento para salvar um inteiro em vez de um char;
+            fscanf(f, " %c", &auxi);
+            aux = auxi - '0'; 
+            matrix[i][j]= aux;
+        }
+    }
+    //fechando o f
+    fclose(f);
+    return matrix;
+}
+
+void finishGrid(int** matrix){
+
+    int i;
+    for(i=0; i<LINHA;i++){
+        free(matrix[i]);
+    }
+    free(matrix);
+}
+
 
 void insereJogador(Jogador *jogadores, char *nick, int id, short *numJogadores)
 {
@@ -173,6 +209,9 @@ int main()
     //Matriz do jogo
     int **grid = NULL;
 
+    //Le o arquivo "map.txt" e aloca em grid
+    grid = readGrid();
+
     //Gera as manchas de oleo na matriz
     generateOilStain(grid);
 
@@ -235,6 +274,9 @@ int main()
 
         //TODO resto do servidor
     }
+    // Dando free no grid
+    finishGrid(grid);
+    
     free(jogadores);
     return 0;
 }
