@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include <stdbool.h>
 #include <allegro5/allegro.h>
+#include <allegro5/allegro_image.h>
 #include <allegro5/allegro_primitives.h>
 #include "client.h"
 #include "core.h"
@@ -88,10 +90,10 @@ void conecta()
     sendMsgToServer(nick, (int)strlen(nick) + 1);
 }
 
-void draw(Jogador j, ALLEGRO_BITMAP *bitmap)
+void draw(Jogador j, ALLEGRO_BITMAP *bitmap, ALLEGRO_BITMAP *personagem)
 {
     al_draw_bitmap(bitmap, 0, 0, 0);
-    al_draw_filled_rectangle((j.pos.x * TILE_WIDTH), (j.pos.y * TILE_HEIGHT), (j.pos.x * TILE_WIDTH) + 30, (j.pos.x * TILE_HEIGHT) + 30, al_map_rgb(100, 125, 99));
+    al_draw_bitmap(personagem, j.pos.x*TILE_WIDTH, j.pos.y*TILE_HEIGHT, 0);
     al_flip_display();
 }
 
@@ -103,13 +105,14 @@ int main()
     imprimeJogador(p);
 
     ALLEGRO_DISPLAY *display = NULL;
-    ALLEGRO_BITMAP *background = NULL;
+    ALLEGRO_BITMAP *background = NULL, *imgP = NULL;
     ALLEGRO_EVENT_QUEUE *evQueue = NULL;
 
     inicializa();
 
     display = al_create_display(WIDTH, HEIGHT);
     background = al_load_bitmap("praia.png");
+    imgP = al_load_bitmap("irra.png");
     evQueue = al_create_event_queue();
 
     al_register_event_source(evQueue, al_get_display_event_source(display));
@@ -151,7 +154,8 @@ int main()
             }
         }
         recvMsgFromServer(&p, DONT_WAIT);
-        draw(p, background);
+        imprimeJogador(p);
+        draw(p, background, imgP);
     }
 
     return 0;
