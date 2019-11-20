@@ -97,8 +97,7 @@ void destroi(){
 }
 
 int main() {
-    inicializa();
- 
+
     Jogador j;
     Jogador aux;
     conecta();
@@ -107,9 +106,9 @@ int main() {
     Jogador inimigo;
     recvMsgFromServer(&inimigo, WAIT_FOR_IT);
     imprimeInimigo(inimigo);
-    display = al_create_display(largura_t,altura_t);
+    inicializa();    
 
-    while(fim)
+    while(1)
     {
         char c;
         ALLEGRO_EVENT ev;
@@ -141,7 +140,8 @@ int main() {
             fim = 1;
         }
         recvMsgFromServer(&aux, DONT_WAIT);
-        if(j.id==aux.id)j=aux;
+        if (j.id==aux.id)
+            j=aux;
         else if(aux.id==inimigo.id)inimigo=aux;
         
             al_draw_filled_rectangle(j.pos.x,j.pos.y,j.pos.x+30,j.pos.y+30,al_map_rgb(255,255,0));
