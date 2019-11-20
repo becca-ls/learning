@@ -4,8 +4,8 @@
 #include <stdbool.h>
 #include <player.h> 
 
-#define LINHA 12
-#define COLUNA 33
+#define LINHA 16
+#define COLUNA 20
 #define CIMA 'w'
 #define BAIXO 's'
 #define ESQ 'a'
