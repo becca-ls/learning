@@ -11,7 +11,7 @@
 #define BUFFER_SIZE (NICK_SIZE + 100)
 #define MAX_CLIENTS 2
 
-int** readGrid(){
+int **readGrid(){  
     
     int i,j, aux;
     FILE *f = NULL;

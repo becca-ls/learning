@@ -11,6 +11,17 @@
 #define BUFFER_SIZE (NICK_SIZE + 100)
 #define MAX_CLIENTS 2
 
+void coletaOleo (int** matriz,int x, int y, Oleo *oleo){
+    int i;
+    for(i=0;i<NUMBER_OF_STAINS;i++){
+        if(oleo[i].pos.y == y && oleo[i].pos.x == x){
+            oleo[i].coletado == true;
+            matriz[y][x] = FREE_POS;
+        }
+    }
+    
+}
+
 void generateOilStain(int **matrix){
     
     int stains = NUMBER_OF_STAINS;
@@ -105,30 +116,36 @@ bool outOfBounds(int x, int y){
     return false;
 }
 
-void Catch(int **matrix, Jogador *player){
+void Catch(int **matrix, Jogador *player, Oleo *oleo){
+
     switch(player->face){
         case CIMA:
-            if(outOfBounds((*player).pos.x, (*player).pos.y-1) == false && matrix[(*player).pos.x][(*player).pos.y - 1] == OIL_STAIN){
-                matrix[(*player).pos.x][(*player).pos.y-1] = FREE_POS;
+            if(outOfBounds((*player).pos.x, (*player).pos.y-1) == false && matrix[(*player).pos.y-1][(*player).pos.x] == OIL_STAIN){
+                matrix[(*player).pos.y-1][(*player).pos.x] = FREE_POS;
                 player->oleo_coletado++;
+                coletaOleo( matrix,(*player).pos.x,(*player).pos.y-1, oleo );
+                
             }
             break;
         case BAIXO:
-            if(outOfBounds((*player).pos.x, (*player).pos.y+1) == false && matrix[(*player).pos.x][(*player).pos.y+1] == OIL_STAIN){
-                matrix[(*player).pos.x][(*player).pos.y+1] = FREE_POS;
+            if(outOfBounds((*player).pos.x, (*player).pos.y+1) == false && matrix[(*player).pos.y+1][(*player).pos.x] == OIL_STAIN){
+                matrix[(*player).pos.y+1][(*player).pos.x] = FREE_POS;
                 player->oleo_coletado++;
+                coletaOleo( matrix, (*player).pos.x,(*player).pos.y+1, oleo );
             }
             break;
         case ESQ:
-            if(outOfBounds((*player).pos.x-1, (*player).pos.y) == false && matrix[(*player).pos.x-1][(*player).pos.y] == OIL_STAIN){
-                matrix[(*player).pos.x-1][(*player).pos.y] = FREE_POS;
+            if(outOfBounds((*player).pos.x-1, (*player).pos.y) == false && matrix[(*player).pos.y][(*player).pos.x-1] == OIL_STAIN){
+                matrix[(*player).pos.y][(*player).pos.x-1] = FREE_POS;
                 player->oleo_coletado++;
+                coletaOleo( matrix, (*player).pos.x-1,(*player).pos.y, oleo );
             }
             break;
         case DIR:
-            if(outOfBounds((*player).pos.x+1, (*player).pos.y) == false && matrix[(*player).pos.x+1][(*player).pos.y] == OIL_STAIN){
-                matrix[(*player).pos.x+1][(*player).pos.y] = FREE_POS;
+            if(outOfBounds((*player).pos.x+1, (*player).pos.y) == false && matrix[(*player).pos.y][(*player).pos.x+1] == OIL_STAIN){
+                matrix[(*player).pos.y][(*player).pos.x+1] = FREE_POS;
                 player->oleo_coletado++;
+                coletaOleo( matrix, (*player).pos.x+1,(*player).pos.y, oleo );
             }
             break;
     }
@@ -163,7 +180,7 @@ bool checkCollision(int** matrix,char command, Jogador *player){
 
 }
 
-void takeAnAction(int **matrix, Jogador *player, char tipo_movimento){
+void takeAnAction(int **matrix, Jogador *player, char tipo_movimento, Oleo *oleo){
     player->tipo_movimento = tipo_movimento;
     switch(tipo_movimento){
         case CIMA:
@@ -195,10 +212,34 @@ void takeAnAction(int **matrix, Jogador *player, char tipo_movimento){
             }
             break;
         case ACAO:
-            Catch(matrix, player);
+            Catch(matrix, player, oleo);
         break;
         player->tipo_movimento = NENHUM;
     }
+}
+//gera oleo no meio da matriz! E o vetor de oleo
+void genOleo(int** grid, Oleo* oleos)
+{ 
+    int i = 0, x, y;
+    srand(time(NULL));
+    int qtd = NUMBER_OF_STAINS;
+    oleos = (Oleo *)realloc(oleos, qtd * sizeof(oleos));
+    if (oleos == NULL)
+        exit(-1);
+    while (i < qtd)
+    {
+        x = (rand() % LINHA);
+        y = (rand() % COLUNA);
+
+        if (grid[y][x] == FREE_POS)
+        {
+            oleos[i].pos.x = x;
+            oleos[i].pos.y = y;
+            oleos[i].coletado = false;
+            i++;
+            grid[y][x] = OIL_STAIN;
+        }
+    } 
 }
 
 int main()
@@ -210,8 +251,9 @@ int main()
     grid = readGrid();
 
     //Gera as manchas de oleo na matriz
+    Oleo * oleos;
     //generateOilStain(grid);
-
+    olheus(grid, oleos);
     //Vetor que armazena os jogadores no jogo
     Jogador *jogadores = (Jogador *)malloc(MAX_CLIENTS * sizeof(Jogador));
 
@@ -263,7 +305,7 @@ int main()
             struct msg_ret_t msg_ret = recvMsg(&id_movimento);
             if (msg_ret.status == MESSAGE_OK)
             {
-                takeAnAction(grid,&jogadores[msg_ret.client_id], id_movimento);
+                takeAnAction(grid,&jogadores[msg_ret.client_id], id_movimento, oleos);
                 broadcast((Jogador *)&jogadores[msg_ret.client_id], sizeof(Jogador));
                 //TODO TRATAR AS MENSAGENS RECEBIDAS
             }
@@ -273,7 +315,7 @@ int main()
     }
     // Dando free no grid
     finishGrid(grid);
-    
+    free(oleos);
     free(jogadores);
     return 0;
 }

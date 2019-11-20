@@ -1,6 +1,9 @@
 #ifndef ENUM_H
 #define ENUM_H
 
+#include <stdbool.h>
+#include <player.h> 
+
 #define LINHA 12
 #define COLUNA 33
 #define CIMA 'w'
@@ -31,5 +34,10 @@ enum position
     PLAYER,
     OIL_STAIN
 };
+
+typedef struct {
+    Pos pos;
+    bool coletado;
+} Oleo;
 
 #endif
