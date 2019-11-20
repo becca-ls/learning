@@ -1,8 +1,8 @@
 # client code directory name
-CLIENTDIR := tests/serverResetTest/client
+CLIENTDIR := tests/testePV/client
 
 # server code directory name
-SERVERDIR := tests/serverResetTest/server
+SERVERDIR := tests/testePV/server
 
 # common code directory name
 COMMONDIR := common

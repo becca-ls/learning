@@ -18,23 +18,23 @@
 
 bool inicializa()
 {
-    if(!al_init())
+    if (!al_init())
     {
         puts("Incapaz de iniciar o allegro");
         exit(1);
     }
-    if(!al_init_image_addon())
+    if (!al_init_image_addon())
     {
         puts("Incapaz de iniciar o image addon");
         exit(1);
     }
-    if(!al_install_keyboard())
+    if (!al_install_keyboard())
     {
         puts("Incapaz de instalar o keyboard addon");
         exit(1);
     }
 
-    if(!al_init_primitives_addon())
+    if (!al_init_primitives_addon())
     {
         puts("Incapaz de iniciar o primitives addon");
         exit(1);
@@ -43,7 +43,8 @@ bool inicializa()
     return true;
 }
 
-enum conn_ret_t criaConexao() {
+enum conn_ret_t criaConexao()
+{
     char end[MSG_MAX_SIZE];
     printf("Digite o ip do servidor\n");
     scanf(" %s", end);
@@ -51,42 +52,46 @@ enum conn_ret_t criaConexao() {
     return connectToServer(end);
 }
 
-void conecta() {
+void conecta()
+{
 
     enum conn_ret_t con = criaConexao();
-    
-    while(con != SERVER_UP) {
+
+    while (con != SERVER_UP)
+    {
         puts("Problema na conexao");
         int flag;
         flag = tolower(getchar());
-        while(flag != 'n' && flag != 'y'){
+        while (flag != 'n' && flag != 'y')
+        {
             puts("Digita de novo");
             flag = tolower(getchar());
         }
-        
-        if(flag == 'n')
+
+        if (flag == 'n')
             exit(EXIT_SUCCESS);
-        else 
+        else
             con = criaConexao();
     }
-    
+
     char nick[NICK_SIZE + 4];
-   
-    printf("Digite um nick com %d caracteres: \n", NICK_SIZE-1);
+
+    printf("Digite um nick com %d caracteres: \n", NICK_SIZE - 1);
     scanf("%s", nick);
-    
-    while((int)strlen(nick) > 3) {
-        printf("Digite um nick com %d caracteres: \n", NICK_SIZE-1);
+
+    while ((int)strlen(nick) > 3)
+    {
+        printf("Digite um nick com %d caracteres: \n", NICK_SIZE - 1);
         scanf(" %s", nick);
     }
 
-    sendMsgToServer(nick, (int)strlen(nick)+1);
+    sendMsgToServer(nick, (int)strlen(nick) + 1);
 }
 
 void draw(Jogador j, ALLEGRO_BITMAP *bitmap)
 {
     al_draw_bitmap(bitmap, 0, 0, 0);
-    al_draw_filled_rectangle((j.pos.x*TILE_WIDTH), (j.pos.y*TILE_HEIGHT),(j.pos.x*TILE_WIDTH)+30, (j.pos.x*TILE_HEIGHT)+30, al_map_rgb(100, 125, 99));
+    al_draw_filled_rectangle((j.pos.x * TILE_WIDTH), (j.pos.y * TILE_HEIGHT), (j.pos.x * TILE_WIDTH) + 30, (j.pos.x * TILE_HEIGHT) + 30, al_map_rgb(100, 125, 99));
     al_flip_display();
 }
 
@@ -96,22 +101,58 @@ int main()
     conecta();
     recvMsgFromServer(&p, WAIT_FOR_IT);
     imprimeJogador(p);
-    
+
     ALLEGRO_DISPLAY *display = NULL;
     ALLEGRO_BITMAP *background = NULL;
-    
+    ALLEGRO_EVENT_QUEUE *evQueue = NULL;
+
     inicializa();
 
     display = al_create_display(WIDTH, HEIGHT);
     background = al_load_bitmap("praia.png");
+    evQueue = al_create_event_queue();
+
+    al_register_event_source(evQueue, al_get_display_event_source(display));
+    al_register_event_source(evQueue, al_get_keyboard_event_source());
+
     al_draw_bitmap(background, 0, 0, 0);
     al_flip_display();
 
+    ALLEGRO_EVENT event;
+    while (1)
+    {
+        ALLEGRO_TIMEOUT timeout;
+        al_init_timeout(&timeout, 1 / FPS);
+        al_wait_for_event_until(evQueue, &event, &timeout);
+        if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
+            break;
 
-
-    
-
-
+        if (event.type == ALLEGRO_EVENT_KEY_DOWN)
+        {
+            char c;
+            switch (event.keyboard.keycode)
+            {
+            case ALLEGRO_KEY_W:
+                c = CIMA;
+                sendMsgToServer((char *)&c, sizeof(char));
+                break;
+            case ALLEGRO_KEY_S:
+                c = BAIXO;
+                sendMsgToServer((char *)&c, sizeof(char));
+            case ALLEGRO_KEY_A:
+                c = ESQ;
+                sendMsgToServer((char *)&c, sizeof(char));
+            case ALLEGRO_KEY_D:
+                c = DIR;
+                sendMsgToServer((char *)&c, sizeof(char));
+                break;
+            default:
+                break;
+            }
+        }
+        recvMsgFromServer(&p, DONT_WAIT);
+        draw(p, background);
+    }
 
     return 0;
 }
