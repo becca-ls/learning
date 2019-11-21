@@ -93,16 +93,16 @@ void conecta()
 void draw(Jogador j, ALLEGRO_BITMAP *bitmap, ALLEGRO_BITMAP *personagem)
 {
     al_draw_bitmap(bitmap, 0, 0, 0);
-    al_draw_bitmap(personagem, j.pos.x*TILE_WIDTH, j.pos.y*TILE_HEIGHT, 0);
+    al_draw_bitmap(personagem, j.pos.x*TILE_WIDTH/2, j.pos.y*TILE_HEIGHT/2, 0);
     al_flip_display();
 }
 
 int main()
 {
-    Jogador p;
+    Jogo jogo;
     conecta();
-    recvMsgFromServer(&p, WAIT_FOR_IT);
-    imprimeJogador(p);
+    recvMsgFromServer(&jogo, WAIT_FOR_IT);
+    imprimeJogador(jogo.p1);
 
     ALLEGRO_DISPLAY *display = NULL;
     ALLEGRO_BITMAP *background = NULL, *imgP = NULL;
@@ -132,30 +132,32 @@ int main()
 
         if (event.type == ALLEGRO_EVENT_KEY_DOWN)
         {
-            char c;
+            Movimento acao;
             switch (event.keyboard.keycode)
             {
             case ALLEGRO_KEY_W:
-                c = CIMA;
-                sendMsgToServer((char *)&c, sizeof(char));
+                acao.tipo_movimento = CIMA;
+                sendMsgToServer((Movimento *)&acao, sizeof(Movimento));
                 break;
             case ALLEGRO_KEY_S:
-                c = BAIXO;
-                sendMsgToServer((char *)&c, sizeof(char));
+                acao.tipo_movimento = BAIXO;
+                sendMsgToServer((Movimento *)&acao, sizeof(Movimento));
+                break;
             case ALLEGRO_KEY_A:
-                c = ESQ;
-                sendMsgToServer((char *)&c, sizeof(char));
+                acao.tipo_movimento = ESQ;
+                sendMsgToServer((Movimento *)&acao, sizeof(Movimento));
+                break;
             case ALLEGRO_KEY_D:
-                c = DIR;
-                sendMsgToServer((char *)&c, sizeof(char));
+                acao.tipo_movimento = DIR;
+                sendMsgToServer((Movimento *)&acao, sizeof(Movimento));
                 break;
             default:
                 break;
             }
         }
-        recvMsgFromServer(&p, DONT_WAIT);
-        imprimeJogador(p);
-        draw(p, background, imgP);
+        recvMsgFromServer(&jogo, DONT_WAIT);
+        imprimeJogador(jogo.p1);
+        draw(jogo.p1, background, imgP);
     }
 
     return 0;

@@ -12,6 +12,21 @@
 #define DIR 'd'
 #define NUMBER_OF_STAINS 20
 
+
+typedef struct 
+{
+  Jogador p1;
+  Jogador p2; 
+} Jogo;
+
+typedef struct 
+{
+    char tipo_movimento;
+    int cliente_id;
+} Movimento;
+
+
+
 enum Acao
 {
     NENHUM,
