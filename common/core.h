@@ -75,6 +75,10 @@ void movePlayer(int **grid, Player *p, Move act);
 
 void printOil(Oleo *oleos);
 
+bool outOfOil(Game g);
+
+bool checkOil(Oleo e);
+
 Oleo genOil(int **grid);
 
 void initOils(Game *g, int **grid);

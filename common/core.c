@@ -94,6 +94,21 @@ void movePlayer(int **grid, Player *p, Move act)
     }
 }
 
+
+bool outOfOil(Game g)
+{
+    if(checkOil(g.oil_a) && checkOil(g.oil_b) && checkOil(g.oil_c))
+        return false;
+    
+    return true;
+}
+
+bool checkOil(Oleo e)
+{
+    return e.inGame;
+}
+
+
 Oleo genOil(int** grid)
 { 
     Oleo oleo;

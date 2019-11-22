@@ -68,8 +68,8 @@ int main()
 
         //enviaInimigo(jogadores, numJogadores, &estado_jogo);
 
-        /*Move act;
-        while (estado_jogo == INGAME)
+        Move act;
+        while (aux.game_state == INGAME)
         {
             
             struct msg_ret_t msg_ret = recvMsg(&act);
@@ -88,7 +88,7 @@ int main()
                 printf("Jogador %s do id %d desconectou.\nPosicao %d esta livre\n", jogadores[msg_ret.client_id].nick,
                        msg_ret.client_id, msg_ret.client_id);
             }
-        }*/
+        }
 
         //TODO resto do servidor
     }

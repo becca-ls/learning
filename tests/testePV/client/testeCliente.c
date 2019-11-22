@@ -90,10 +90,18 @@ void conecta()
     sendMsgToServer(nick, (int)strlen(nick) + 1);
 }
 
-void draw(Oleo *oleos, Player j, ALLEGRO_BITMAP *bitmap, ALLEGRO_BITMAP *personagem)
+void draw(Game j, ALLEGRO_BITMAP *bitmap, ALLEGRO_BITMAP *personagem, ALLEGRO_BITMAP *oil)
 {
     al_draw_bitmap(bitmap, 0, 0, 0);
-    al_draw_bitmap(personagem, j.pos.x*TILE_WIDTH, j.pos.y*TILE_HEIGHT, 0);
+    
+    if(checkOil(j.oil_a))
+        al_draw_bitmap(oil, j.oil_a.pos.x*TILE_WIDTH, j.oil_a.pos.y*TILE_HEIGHT, 0);
+    if(checkOil(j.oil_b))
+        al_draw_bitmap(oil, j.oil_b.pos.x*TILE_WIDTH, j.oil_b.pos.y*TILE_HEIGHT , 0);
+    if(checkOil(j.oil_c))
+        al_draw_bitmap(oil, j.oil_c.pos.x*TILE_WIDTH, j.oil_c.pos.y*TILE_HEIGHT , 0);
+    
+    al_draw_bitmap(personagem, j.p1.pos.x*TILE_WIDTH, j.p1.pos.y*TILE_HEIGHT, 0);
     
     al_flip_display();
 }
@@ -106,37 +114,18 @@ int main()
     recvMsgFromServer(&jogo, WAIT_FOR_IT);
     printPlayer(jogo.p1);
     printf("(%d, %d); (%d, %d); (%d, %d)\n", jogo.oil_a.pos.x, jogo.oil_a.pos.y, jogo.oil_b.pos.x, jogo.oil_b.pos.y, jogo.oil_c.pos.x, jogo.oil_c.pos.y);
-    while(1);
-    /*ALLEGRO_DISPLAY *display = NULL;
-    ALLEGRO_BITMAP *background = NULL, *imgP = NULL;
+
+    ALLEGRO_DISPLAY *display = NULL;
+    ALLEGRO_BITMAP *background = NULL, *imgP = NULL, *imgOil = NULL;
     ALLEGRO_EVENT_QUEUE *evQueue = NULL;
 
     inicializa();
 
     display = al_create_display(WIDTH, HEIGHT);
-    if(display==NULL){
-        printf("Falha ao inicializar add-on allegro_image.\n");
-        al_destroy_display(display);
-        exit(1);
-    }
     background = al_load_bitmap("praia.png");
-    if(background==NULL){
-        printf("deu bosta");
-        al_destroy_bitmap(background);
-        exit(1);
-    }
     imgP = al_load_bitmap("irra.png");
-    if(imgP==NULL){
-        printf("deu bosta");
-        al_destroy_bitmap(imgP);
-        exit(1);
-    }
+    imgOil = al_load_bitmap("oil.png");
     evQueue = al_create_event_queue();
-    if (evQueue==NULL) {
-        fprintf(stderr, "Falha ao criar fila de eventos.\n");
-        al_destroy_event_queue(evQueue);
-        exit(1);
-    } 
 
     al_register_event_source(evQueue, al_get_display_event_source(display));
     al_register_event_source(evQueue, al_get_keyboard_event_source());
@@ -156,34 +145,34 @@ int main()
 
         if (event.type == ALLEGRO_EVENT_KEY_DOWN)
         {
-            Movimento acao;
+            Move acao;
             switch (event.keyboard.keycode)
             {
             case ALLEGRO_KEY_W:
-                acao.tipo_movimento = CIMA;
-                sendMsgToServer((Movimento *)&acao, sizeof(Movimento));
+                acao.act = UP;
+                sendMsgToServer((Move *)&acao, sizeof(Move));
                 break;
             case ALLEGRO_KEY_S:
-                acao.tipo_movimento = BAIXO;
-                sendMsgToServer((Movimento *)&acao, sizeof(Movimento));
+                acao.act = DOWN;
+                sendMsgToServer((Move *)&acao, sizeof(Move));
                 break;
             case ALLEGRO_KEY_A:
-                acao.tipo_movimento = ESQ;
-                sendMsgToServer((Movimento *)&acao, sizeof(Movimento));
+                acao.act = LEFT;
+                sendMsgToServer((Move *)&acao, sizeof(Move));
                 break;
             case ALLEGRO_KEY_D:
-                acao.tipo_movimento = DIR;
-                sendMsgToServer((Movimento *)&acao, sizeof(Movimento));
+                acao.act = RIGHT;
+                sendMsgToServer((Move *)&acao, sizeof(Move));
                 break;
             default:
                 break;
             }
         }
         recvMsgFromServer(&jogo, DONT_WAIT);
-        imprimeJogador(jogo.p1);
-        imprimeOleo(jogo.oleo);
-        draw(jogo.oleo,jogo.p1, background, imgP);
-    }*/
-
+        printPlayer(jogo.p1);
+        printf("(%d, %d); (%d, %d); (%d, %d)\n", jogo.oil_a.pos.x, jogo.oil_a.pos.y, jogo.oil_b.pos.x, jogo.oil_b.pos.y, jogo.oil_c.pos.x, jogo.oil_c.pos.y);
+        draw(jogo, background, imgP, imgOil);
+    }
+    
     return 0;
 }
