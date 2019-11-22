@@ -25,7 +25,7 @@ int main(void)
   //ALLEGRO_SAMPLE *sample = NULL;
   // Flag que condicionará nosso looping
   int sair = 0;
-  int flagTuto=0;
+  int flagTuto=0, flagJogo=0;
 
  
   if (!al_init())
@@ -98,6 +98,12 @@ int main(void)
     return -1;
   }
 
+  //Instalando teclado
+  if (!al_install_keyboard())
+  {
+    fprintf(stderr, "Falha ao inicializar o teclado.\n");
+    return false;
+  }
  
   // Configura o título da janela
   al_set_window_title(janela, "menuzao");
@@ -162,6 +168,8 @@ int main(void)
  
   // Dizemos que vamos tratar os eventos vindos do mouse
   al_register_event_source(fila, al_get_mouse_event_source());
+  //E teclado
+  al_register_event_source(fila, al_get_keyboard_event_source());
  
   // Flag indicando se o mouse está sobre o retângulo central
   int jogar = 0, tuto =0, sair_cor=0;
@@ -230,7 +238,77 @@ int main(void)
             evento.mouse.y >= (2*ALTURA) / 11 &&
             evento.mouse.y <= (3*ALTURA) / 11)
         {
-          //  estado_jogo  = JOGANDO;   Aqui tu muda o char la
+          int flagoso =1;
+          int tecla;
+          int contador=0;
+          char caractere;
+          char buffer[15];
+          //LIMPA BUFFER;
+          strcpy(buffer, "");
+
+          while(!flagJogo){
+
+             al_clear_to_color(al_map_rgb(0,0,0));
+                
+                al_draw_scaled_bitmap(maconheiro_de_mangue,0,0, al_get_bitmap_width(maconheiro_de_mangue),al_get_bitmap_height(maconheiro_de_mangue),0,0,LARGURA, ALTURA, 0 );
+                al_draw_text(fonte, al_map_rgb(0, 0, 0),LARGURA/8,200,0,"     DIGITE O IP DO SERVIDOR");
+                al_draw_text(fonte, al_map_rgb(0, 0, 0),LARGURA/8,550,0,"IP:");
+                al_draw_text(fonte, al_map_rgb(255,255,255),(LARGURA / 2)-40, ((ALTURA*8)/11)+al_get_bitmap_height(botao_sair)/4, 0, "SAIR");
+                if(flagoso ==1){
+                    al_set_target_bitmap(botao_sair);
+                    al_clear_to_color (al_map_rgb(65,105,255)); 
+                    al_set_target_bitmap(al_get_backbuffer(janela));
+                    al_draw_bitmap(botao_sair, LARGURA/2 - al_get_bitmap_width(botao_sair)/2, (ALTURA*8)/11, 0);
+                    al_draw_text(fonte, al_map_rgb(255,255,255),(LARGURA / 2)-40, ((ALTURA*8)/11)+al_get_bitmap_height(botao_sair)/4, 0, "SAIR");
+                    al_flip_display();
+                    flagoso=0;
+                    }
+                al_wait_for_event(fila,&evento);
+                if(evento.type==ALLEGRO_EVENT_KEY_UP && contador< 11){
+                  switch(evento.keyboard.keycode)
+                  {
+                  case ALLEGRO_KEY_0:
+                    tecla = 0;
+                    break;
+                  case ALLEGRO_KEY_1:
+                    tecla = 1;
+                    break;
+                  case ALLEGRO_KEY_2:
+                    tecla = 2;
+                    break;
+                  case ALLEGRO_KEY_3:
+                    tecla = 3;
+                    break;
+                  case ALLEGRO_KEY_4:
+                    tecla = 4;
+                    break;
+                  case ALLEGRO_KEY_5:
+                    tecla = 5;
+                    break;
+                  case ALLEGRO_KEY_6:
+                    tecla = 6;
+                    break;
+                  case ALLEGRO_KEY_7:
+                    tecla = 7;
+                    break;
+                  case ALLEGRO_KEY_8:
+                    tecla = 8;
+                    break;
+                  case ALLEGRO_KEY_9:
+                    tecla = 9;
+                    break;
+                  }
+                  contador++;
+                  caractere = tecla +'0';
+                  strcat(buffer, &caractere);
+                  printf("%s\n", buffer);
+                  al_draw_text(fonte, al_map_rgb(0, 0, 0),LARGURA/8 + 50,550,0,buffer);
+                  al_flip_display();
+                }
+
+
+
+          }
         }
 //Clique no botao tutorial
         else if (evento.mouse.x >= LARGURA / 2 - al_get_bitmap_width(botao_jogar) / 2 &&
@@ -240,6 +318,7 @@ int main(void)
         {
            // printf("vai rebola pro pai\n");
             int flag =1;
+           // al_set_audio_stream_playing(musica, 0);
             while(!flagTuto){
                 //printf("ENTRA\n");
                 al_clear_to_color(al_map_rgb(0,0,0));
@@ -296,6 +375,7 @@ int main(void)
                 al_draw_text(fonte, al_map_rgb(255,255,255),(LARGURA / 2)-40, ((ALTURA*8)/11)+al_get_bitmap_height(botao_sair)/4, 0, "SAIR");
                 al_flip_display();
             }
+            //al_set_audio_stream_playing(musica, 1);
             //sair = 1;
         }
 
