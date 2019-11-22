@@ -1,59 +1,90 @@
-#ifndef ENUM_H
-#define ENUM_H
+#ifndef CORE_H
+#define CORE_H
 
-#include <stdbool.h>
-#include <player.h> 
+#define NICK_SIZE 3
 
-#define LINHA 16
-#define COLUNA 20
-#define CIMA 'w'
-#define BAIXO 's'
-#define ESQ 'a'
-#define DIR 'd'
-#define NUMBER_OF_STAINS 3
+#define NUMBER_OF_OILS 3
 
-typedef struct {
+#define ROW 16
+#define COLUMN 20
+#define UP 'W'
+#define DOWN 's'
+#define LEFT 'a'
+#define RIGHT 'd'
+
+typedef struct
+{
+    int x, y;
+} Pos;
+
+typedef struct 
+{
     Pos pos;
-    bool coletado;
+    bool inGame;
 } Oleo;
 
 
-typedef struct 
+typedef struct
 {
-  Jogador p1;
-  Jogador p2;
-  Oleo *oleo; 
-} Jogo;
+    char act;
+    int idClient;
+} Move;
 
-typedef struct 
+typedef struct
 {
-    char tipo_movimento;
-    int cliente_id;
-} Movimento;
+    char nick[NICK_SIZE+1];
+    char saude;
+    Pos pos;
+    int oleo_coletado;
+    
+} Player;
 
-
-
-enum Acao
+typedef struct
 {
-    NENHUM,
-    POSICAO,
-    DANO,
-    ACAO
+    Player p1;
+    Player p2;
+    Oleo oil_a, oil_b, oil_c;
+    int game_state;
+} Game;
+
+enum GAME_STATE
+{
+    PREGAME,
+    INGAME,
+    POSGAME
 };
 
-enum Estado_jogo
-{
-    PREJOGO,
-    JOGANDO,
-    POSJOGO
-};
-
-enum position
+enum MAP
 {
     FREE_POS,
     OBSTACLE,
-    PLAYER,
-    OIL_STAIN
+    OIL
 };
+
+int **readGrid();
+
+Player player(char *nick);
+
+void addPlayer(Player *v, Player e, int *qtdPlayers);
+
+void setFreePos(int **grid, int i, int j);
+
+int checkFreePos(int **grid, int i, int j);
+
+void movePlayer(int **grid, Player *p, Move act);
+
+void printOil(Oleo *oleos);
+
+Oleo genOil(int **grid);
+
+void initOils(Game *g, int **grid);
+
+void printPlayer(Player player);
+
+void printGrid(int **grid);
+
+void freeGrid(int **grid);
+
+
 
 #endif

@@ -8,7 +8,7 @@
 #include <allegro5/allegro_primitives.h>
 #include "client.h"
 #include "core.h"
-#include "player.h"
+
 
 #define MSG_MAX_SIZE 50
 #define FPS 60
@@ -78,39 +78,36 @@ void conecta()
 
     char nick[NICK_SIZE + 4];
 
-    printf("Digite um nick com %d caracteres: \n", NICK_SIZE - 1);
+    printf("Digite um nick com %d caracteres: \n", NICK_SIZE);
     scanf("%s", nick);
 
     while ((int)strlen(nick) > 3)
     {
-        printf("Digite um nick com %d caracteres: \n", NICK_SIZE - 1);
+        printf("Digite um nick com %d caracteres: \n", NICK_SIZE);
         scanf(" %s", nick);
     }
 
     sendMsgToServer(nick, (int)strlen(nick) + 1);
 }
 
-void draw(Oleo *oleos, Jogador j, ALLEGRO_BITMAP *bitmap, ALLEGRO_BITMAP *personagem)
+void draw(Oleo *oleos, Player j, ALLEGRO_BITMAP *bitmap, ALLEGRO_BITMAP *personagem)
 {
     al_draw_bitmap(bitmap, 0, 0, 0);
     al_draw_bitmap(personagem, j.pos.x*TILE_WIDTH, j.pos.y*TILE_HEIGHT, 0);
-    for(int i = 0; i < NUMBER_OF_STAINS; i++)
-    {
-        if(!oleos[i].coletado)
-            al_draw_bitmap(personagem, oleos[i].pos.x*TILE_WIDTH, oleos[i].pos.y*TILE_HEIGHT, 0);
-    }
+    
     al_flip_display();
 }
 
 int main()
 {
-    Jogo jogo;
-    jogo.oleo = (Oleo *)malloc(NUMBER_OF_STAINS*sizeof(Oleo));
+    Game jogo;
+    //jogo.oleo = (Oleo *)malloc(NUMBER_OF_STAINS*sizeof(Oleo));
     conecta();
     recvMsgFromServer(&jogo, WAIT_FOR_IT);
-    imprimeJogador(jogo.p1);
-
-    ALLEGRO_DISPLAY *display = NULL;
+    printPlayer(jogo.p1);
+    printf("(%d, %d); (%d, %d); (%d, %d)\n", jogo.oil_a.pos.x, jogo.oil_a.pos.y, jogo.oil_b.pos.x, jogo.oil_b.pos.y, jogo.oil_c.pos.x, jogo.oil_c.pos.y);
+    while(1);
+    /*ALLEGRO_DISPLAY *display = NULL;
     ALLEGRO_BITMAP *background = NULL, *imgP = NULL;
     ALLEGRO_EVENT_QUEUE *evQueue = NULL;
 
@@ -128,6 +125,7 @@ int main()
     al_flip_display();
 
     ALLEGRO_EVENT event;
+    printf("opa\n");
     while (1)
     {
         ALLEGRO_TIMEOUT timeout;
@@ -163,8 +161,9 @@ int main()
         }
         recvMsgFromServer(&jogo, DONT_WAIT);
         imprimeJogador(jogo.p1);
+        imprimeOleo(jogo.oleo);
         draw(jogo.oleo,jogo.p1, background, imgP);
-    }
+    }*/
 
     return 0;
 }
