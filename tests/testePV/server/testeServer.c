@@ -4,8 +4,8 @@
 #include <stdbool.h>
 #include <time.h>
 #include "server.h"
-#include "player.h"
 #include "core.h"
+#include "player.h"
 
 #define MSG_MAX_SIZE 350
 #define BUFFER_SIZE (NICK_SIZE + 100)
@@ -114,13 +114,49 @@ void movePlayer(int **grid, Jogador *p, Movimento acao)
     }
 }
 
+void imprimeOleo(Oleo *oleos)
+{
+    for(int i = 0; i < NUMBER_OF_STAINS; i++)
+    {
+        printf("(%d,%d)", oleos[i].pos.x, oleos[i].pos.y);
+    }
+}
+
+Oleo *genOleo(int** grid)
+{ 
+    Oleo *oleos = NULL;
+    int i = 0, x, y;
+    //srand(time(NULL));
+    oleos = (Oleo *)malloc(NUMBER_OF_STAINS*sizeof(Oleo));
+    if(oleos == NULL)
+        exit(1);
+
+    while(i < NUMBER_OF_STAINS)
+    {
+        x = rand()%LINHA;
+        y = rand()%COLUNA;
+        if(grid[y][x] == FREE_POS)
+        {
+            oleos[i].pos.x = x;
+            oleos[i].pos.y = y;
+            grid[y][x] = OIL_STAIN;
+            i++;
+        }
+    }
+     
+    return oleos;
+}
+
 int main()
 {
+    Jogo aux;
     //Matriz do jogo
     int **grid = NULL;
 
     //Le o arquivo "map.txt" e aloca em grid
     grid = readGrid();
+    //srand(time(NULL));
+    aux.oleo = genOleo(grid);
 
     Jogador *jogadores = (Jogador *)malloc(MAX_CLIENTS * sizeof(Jogador));
 
@@ -159,7 +195,7 @@ int main()
         Movimento acao;
         while (estado_jogo == JOGANDO)
         {
-            Jogo aux;
+            
             struct msg_ret_t msg_ret = recvMsg(&acao);
             if (msg_ret.status == MESSAGE_OK)
             {

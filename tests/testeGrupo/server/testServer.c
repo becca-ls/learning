@@ -185,7 +185,7 @@ int main()
   grid = readGrid();
 
   //Gera as manchas de oleo na matriz
-  //generateOilStain(grid);
+  generateOilStain(grid);
 
   //Vetor que armazena os jogadores no jogo
   Jogador *jogadores = (Jogador *)malloc(MAX_CLIENTS * sizeof(Jogador));

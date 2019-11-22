@@ -90,16 +90,22 @@ void conecta()
     sendMsgToServer(nick, (int)strlen(nick) + 1);
 }
 
-void draw(Jogador j, ALLEGRO_BITMAP *bitmap, ALLEGRO_BITMAP *personagem)
+void draw(Oleo *oleos, Jogador j, ALLEGRO_BITMAP *bitmap, ALLEGRO_BITMAP *personagem)
 {
     al_draw_bitmap(bitmap, 0, 0, 0);
     al_draw_bitmap(personagem, j.pos.x*TILE_WIDTH, j.pos.y*TILE_HEIGHT, 0);
+    for(int i = 0; i < NUMBER_OF_STAINS; i++)
+    {
+        if(!oleos[i].coletado)
+            al_draw_bitmap(personagem, oleos[i].pos.x*TILE_WIDTH, oleos[i].pos.y*TILE_HEIGHT, 0);
+    }
     al_flip_display();
 }
 
 int main()
 {
     Jogo jogo;
+    jogo.oleo = (Oleo *)malloc(NUMBER_OF_STAINS*sizeof(Oleo));
     conecta();
     recvMsgFromServer(&jogo, WAIT_FOR_IT);
     imprimeJogador(jogo.p1);
@@ -157,7 +163,7 @@ int main()
         }
         recvMsgFromServer(&jogo, DONT_WAIT);
         imprimeJogador(jogo.p1);
-        draw(jogo.p1, background, imgP);
+        draw(jogo.oleo,jogo.p1, background, imgP);
     }
 
     return 0;

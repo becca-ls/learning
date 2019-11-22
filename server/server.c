@@ -218,8 +218,9 @@ void takeAnAction(int **matrix, Jogador *player, char tipo_movimento, Oleo *oleo
     }
 }
 //gera oleo no meio da matriz! E o vetor de oleo
-void genOleo(int** grid, Oleo* oleos)
+Oleo *genOleo(int** grid)
 { 
+    Oleo *oleos = NULL;
     int i = 0, x, y;
     srand(time(NULL));
     int qtd = NUMBER_OF_STAINS;
@@ -240,6 +241,8 @@ void genOleo(int** grid, Oleo* oleos)
             grid[y][x] = OIL_STAIN;
         }
     } 
+
+    return oleos;
 }
 
 int main()
@@ -253,7 +256,7 @@ int main()
     //Gera as manchas de oleo na matriz
     Oleo * oleos;
     //generateOilStain(grid);
-    olheus(grid, oleos);
+    
     //Vetor que armazena os jogadores no jogo
     Jogador *jogadores = (Jogador *)malloc(MAX_CLIENTS * sizeof(Jogador));
 

@@ -10,13 +10,19 @@
 #define BAIXO 's'
 #define ESQ 'a'
 #define DIR 'd'
-#define NUMBER_OF_STAINS 20
+#define NUMBER_OF_STAINS 3
+
+typedef struct {
+    Pos pos;
+    bool coletado;
+} Oleo;
 
 
 typedef struct 
 {
   Jogador p1;
-  Jogador p2; 
+  Jogador p2;
+  Oleo *oleo; 
 } Jogo;
 
 typedef struct 
@@ -49,10 +55,5 @@ enum position
     PLAYER,
     OIL_STAIN
 };
-
-typedef struct {
-    Pos pos;
-    bool coletado;
-} Oleo;
 
 #endif
