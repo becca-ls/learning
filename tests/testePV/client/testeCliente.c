@@ -114,9 +114,29 @@ int main()
     inicializa();
 
     display = al_create_display(WIDTH, HEIGHT);
+    if(display==NULL){
+        printf("Falha ao inicializar add-on allegro_image.\n");
+        al_destroy_display(display);
+        exit(1);
+    }
     background = al_load_bitmap("praia.png");
+    if(background==NULL){
+        printf("deu bosta");
+        al_destroy_bitmap(background);
+        exit(1);
+    }
     imgP = al_load_bitmap("irra.png");
+    if(imgP==NULL){
+        printf("deu bosta");
+        al_destroy_bitmap(imgP);
+        exit(1);
+    }
     evQueue = al_create_event_queue();
+    if (evQueue==NULL) {
+        fprintf(stderr, "Falha ao criar fila de eventos.\n");
+        al_destroy_event_queue(evQueue);
+        exit(1);
+    } 
 
     al_register_event_source(evQueue, al_get_display_event_source(display));
     al_register_event_source(evQueue, al_get_keyboard_event_source());
