@@ -3,6 +3,8 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_image.h> 
+#include <allegro5/allegro_audio.h>
+#include <allegro5/allegro_acodec.h>
 #include <stdio.h>
  
 // Atributos da tela
@@ -19,6 +21,8 @@ int main(void)
   ALLEGRO_BITMAP *botao_sair = NULL, *botao_jogar = NULL, *botao_tuto=NULL;
   ALLEGRO_BITMAP *maconheiro_de_mangue =NULL;
   ALLEGRO_FONT * fonte = NULL;
+  ALLEGRO_AUDIO_STREAM *musica = NULL;
+  //ALLEGRO_SAMPLE *sample = NULL;
   // Flag que condicionará nosso looping
   int sair = 0;
   int flagTuto=0;
@@ -29,7 +33,9 @@ int main(void)
     fprintf(stderr, "Falha ao inicializar a Allegro.\n");
     return -1;
   }
+
     al_init_font_addon();
+
   if (!al_init_ttf_addon())
   {
     fprintf(stderr, "Falha ao inicializar o addon ttf.\n");
@@ -39,6 +45,41 @@ int main(void)
   {
     fprintf(stderr, "Falha ao inicializar o addon de imagem.\n");
     return -1;
+  }
+
+
+  if (!al_install_audio())
+  {
+    fprintf(stderr, "Falha ao inicializar áudio.\n");
+    return false;
+  }
+ 
+  if (!al_init_acodec_addon())
+  {
+    fprintf(stderr, "Falha ao inicializar codecs de áudio.\n");
+    return false;
+  }
+ 
+   if (!al_reserve_samples(5))
+  {
+    fprintf(stderr, "Falha ao alocar canais de áudio.\n");
+    return false;
+  }
+
+  //CARREGANDO O ARQUIVO DE AUDIO
+
+  /*  sample = al_load_sample("palmas.wav");
+  if (!sample)
+  {
+    fprintf(stderr, "Falha ao carregar sample.\n");
+    al_destroy_display(janela);
+    return false;
+  }*/
+
+   musica = al_load_audio_stream("mus.ogg", 4, 1024);
+  if (!musica)
+  {
+    fprintf(stderr, "Falha ao carregar audio.\n");
   }
 
 //Carrega a fonte
@@ -98,7 +139,7 @@ int main(void)
     al_destroy_display(janela);
     return -1;
   }
- 
+
   // Botao de sair
   botao_sair = al_create_bitmap(LARGURA/4, ALTURA/11);
   if (!botao_sair)
@@ -117,14 +158,21 @@ int main(void)
     al_destroy_display(janela);
     return -1;
   }
+  //SETANDO O AUDIO
  
   // Dizemos que vamos tratar os eventos vindos do mouse
   al_register_event_source(fila, al_get_mouse_event_source());
  
   // Flag indicando se o mouse está sobre o retângulo central
   int jogar = 0, tuto =0, sair_cor=0;
+
+  //SETANDO O AUDIO
+  al_attach_audio_stream_to_mixer(musica, al_get_default_mixer());
+  al_set_audio_stream_playmode(musica, ALLEGRO_PLAYMODE_LOOP);
+
   while (!sair)  // Coloca a condiçao para mudar o estado de prejogo pra jogando aqui 
   {
+
     flagTuto=0;
     // Verificamos se há eventos na fila
     while (!al_is_event_queue_empty(fila))
@@ -320,6 +368,7 @@ int main(void)
     // Atualiza a tela
     al_flip_display();
   }
+   al_detach_audio_stream(musica);
  
   // Desaloca os recursos utilizados na aplicação
   al_destroy_bitmap(botao_sair);
@@ -328,6 +377,7 @@ int main(void)
   al_destroy_bitmap(maconheiro_de_mangue);
   al_destroy_display(janela);
   al_destroy_event_queue(fila);
+  al_destroy_audio_stream(musica);
  
   return 0;
 }
