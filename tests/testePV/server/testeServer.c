@@ -75,9 +75,11 @@ int main()
             struct msg_ret_t msg_ret = recvMsg(&act);
             if (msg_ret.status == MESSAGE_OK)
             {
-                movePlayer(grid, &jogadores[msg_ret.client_id], act);
-                aux.p1 = jogadores[0];
-                aux.p2 = jogadores[1];
+                actPlayer(grid, &aux, act, msg_ret.client_id);
+                jogadores[0] = aux.p1;
+                jogadores[1] = aux.p2;
+                //if(outOfOil(aux))
+                  //  initOils(&aux, grid);
                 broadcast((Game *)&aux, sizeof(Game));
                 //TODO TRATAR AS MENSAGENS RECEBIDAS
             }

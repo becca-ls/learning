@@ -95,7 +95,7 @@ void draw(Game j, ALLEGRO_BITMAP *bitmap, ALLEGRO_BITMAP *personagem, ALLEGRO_BI
     al_draw_bitmap(bitmap, 0, 0, 0);
     
     if(checkOil(j.oil_a))
-        al_draw_bitmap(oil, j.oil_a.pos.x*TILE_WIDTH, j.oil_a.pos.y*TILE_HEIGHT, 0);
+        al_draw_bitmap(oil, j.oil_a.pos.x*TILE_WIDTH, j.oil_c.pos.y*TILE_HEIGHT, 0);
     if(checkOil(j.oil_b))
         al_draw_bitmap(oil, j.oil_b.pos.x*TILE_WIDTH, j.oil_b.pos.y*TILE_HEIGHT , 0);
     if(checkOil(j.oil_c))

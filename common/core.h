@@ -35,7 +35,7 @@ typedef struct
     char nick[NICK_SIZE+1];
     char saude;
     Pos pos;
-    int oleo_coletado;
+    int oleo_points;
     
 } Player;
 
@@ -71,7 +71,11 @@ void setFreePos(int **grid, int i, int j);
 
 int checkFreePos(int **grid, int i, int j);
 
+bool freeToWalk(int **grid, int i, int j);
+
 void movePlayer(int **grid, Player *p, Move act);
+
+void actPlayer(int **grd, Game *g, Move act, int id);
 
 void printOil(Oleo *oleos);
 

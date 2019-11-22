@@ -40,7 +40,7 @@ Player player(char *nick)
 {
     Player e;
 
-    e.oleo_coletado = 0;
+    e.oleo_points = 0;
     e.pos.x = 3;
     e.pos.y = 2;
     e.saude = 10;
@@ -60,11 +60,30 @@ void setFreePos(int **grid, int i, int j)
     grid[i][j] = FREE_POS;
 }
 
+bool poscmp(Pos a, Pos b)
+{
+    if (a.x == b.x && a.y == b.y)
+        return true;
+
+    return false;
+}
+
 int checkFreePos(int **grid, int i, int j)
 {
     int r;
-    if(grid[i][j] == FREE_POS) r = 1;
-    else r = 0;
+    if (grid[i][j] == FREE_POS)
+        r = 1;
+    else
+        r = 0;
+    return r;
+}
+
+bool freeToWalk(int **grid, int i, int j)
+{
+    bool r = false;
+    if (grid[i][j] != OBSTACLE)
+        r = true;
+
     return r;
 }
 
@@ -74,19 +93,19 @@ void movePlayer(int **grid, Player *p, Move act)
     switch (act.act)
     {
     case UP:
-        if (checkFreePos(grid, (p->pos.y) - 1, (p->pos.x)))
+        if (freeToWalk(grid, (p->pos.y) - 1, (p->pos.x)))
             p->pos.y -= 1;
         break;
     case DOWN:
-        if (checkFreePos(grid, (p->pos.y) + 1, (p->pos.x)))
+        if (freeToWalk(grid, (p->pos.y) + 1, (p->pos.x)))
             p->pos.y += 1;
         break;
     case LEFT:
-        if (checkFreePos(grid, (p->pos.y), (p->pos.x) - 1))
+        if (freeToWalk(grid, (p->pos.y), (p->pos.x) - 1))
             p->pos.x -= 1;
         break;
     case RIGHT:
-        if (checkFreePos(grid, (p->pos.y), (p->pos.x) + 1))
+        if (freeToWalk(grid, (p->pos.y), (p->pos.x) + 1))
             p->pos.x += 1;
         break;
     default:
@@ -94,12 +113,60 @@ void movePlayer(int **grid, Player *p, Move act)
     }
 }
 
+bool isOil(int **grid, int i, int j)
+{
+    if (grid[i][j] == OIL)
+        return true;
+
+    return false;
+}
+
+void catch (Player *player, Oleo *oleo, int **grid)
+{
+    oleo->inGame = false;
+    player->oleo_points += 1;
+    setFreePos(grid, oleo->pos.y, oleo->pos.x);
+}
+
+void actPlayer(int **grid, Game *g, Move act, int id)
+{
+    //Player *curr = id==0? &(g->p1):&(g->p2);
+    if (id == 0)
+    {
+        movePlayer(grid, &(g->p1), act);
+        if (isOil(grid, g->p1.pos.y, g->p1.pos.x))
+        {
+            if (poscmp(g->p1.pos, g->oil_a.pos))
+                catch (&(g->p1), &(g->oil_a), grid);
+            else if (poscmp(g->p1.pos, g->oil_b.pos))
+                catch (&(g->p1), &(g->oil_b), grid);
+            else if (poscmp(g->p1.pos, g->oil_c.pos))
+                catch (&(g->p1), &(g->oil_c), grid);
+        }
+    }
+    else if (id == 1)
+    {
+        movePlayer(grid, &(g->p2), act);
+        if (isOil(grid, g->p2.pos.y, g->p2.pos.x))
+        {
+            if (poscmp(g->p2.pos, g->oil_a.pos))
+                catch (&(g->p2), &(g->oil_a), grid);
+            else if (poscmp(g->p2.pos, g->oil_b.pos))
+                catch (&(g->p2), &(g->oil_b), grid);
+            else if (poscmp(g->p2.pos, g->oil_c.pos))
+                catch (&(g->p2), &(g->oil_c), grid);
+        }
+    }
+
+    /*if(outOfOil(*g))
+        initOils(g, grid);*/
+}
 
 bool outOfOil(Game g)
 {
-    if(checkOil(g.oil_a) && checkOil(g.oil_b) && checkOil(g.oil_c))
+    if (checkOil(g.oil_a) || checkOil(g.oil_b) || checkOil(g.oil_c))
         return false;
-    
+
     return true;
 }
 
@@ -108,19 +175,18 @@ bool checkOil(Oleo e)
     return e.inGame;
 }
 
-
-Oleo genOil(int** grid)
-{ 
+Oleo genOil(int **grid)
+{
     Oleo oleo;
     bool flag = true;
     int x, y;
     //srand(time(NULL));
 
-    while(flag)
+    while (flag)
     {
-        x = rand()%ROW;
-        y = rand()%COLUMN;
-        if(grid[y][x] == FREE_POS)
+        x = rand() % ROW;
+        y = rand() % COLUMN;
+        if (grid[y][x] == FREE_POS)
         {
             oleo.pos.x = x;
             oleo.pos.y = y;
@@ -129,7 +195,7 @@ Oleo genOil(int** grid)
             flag = false;
         }
     }
-     
+
     return oleo;
 }
 
@@ -142,7 +208,7 @@ void initOils(Game *g, int **grid)
 
 void printOil(Oleo *oleos)
 {
-    for(int i = 0; i < NUMBER_OF_OILS; i++)
+    for (int i = 0; i < NUMBER_OF_OILS; i++)
     {
         printf("(%d,%d)\n", oleos[i].pos.x, oleos[i].pos.y);
     }
@@ -150,14 +216,14 @@ void printOil(Oleo *oleos)
 
 void printPlayer(Player player)
 {
-    printf("%s %d %d (%d, %d)\n", player.nick, player.saude, player.oleo_coletado, player.pos.x, player.pos.y);
+    printf("%s %d %d (%d, %d)\n", player.nick, player.saude, player.oleo_points, player.pos.x, player.pos.y);
 }
 
 void printGrid(int **grid)
 {
-    for(int i = 0; i < ROW; i++)
+    for (int i = 0; i < ROW; i++)
     {
-        for(int j = 0; j < COLUMN; j++)
+        for (int j = 0; j < COLUMN; j++)
         {
             printf("%d", grid[i][j]);
         }
@@ -167,7 +233,7 @@ void printGrid(int **grid)
 
 void freeGrid(int **grid)
 {
-    for(int i =0; i < ROW; i++)
+    for (int i = 0; i < ROW; i++)
     {
         free(grid[i]);
     }
