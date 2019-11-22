@@ -80,9 +80,12 @@ void setFreePos(int **grid, int i, int j)
     grid[i][j] = FREE_POS;
 }
 
-bool checkfreePos(int **grid, int i, int j)
+int checkfreePos(int **grid, int i, int j)
 {
-    return grid[i][j] == FREE_POS;
+    int r;
+    if(grid[i][j] == FREE_POS) r = 1;
+    else r = 0;
+    return r;
 }
 
 void movePlayer(int **grid, Jogador *p, Movimento acao)

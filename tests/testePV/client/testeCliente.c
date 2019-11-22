@@ -93,7 +93,7 @@ void conecta()
 void draw(Jogador j, ALLEGRO_BITMAP *bitmap, ALLEGRO_BITMAP *personagem)
 {
     al_draw_bitmap(bitmap, 0, 0, 0);
-    al_draw_bitmap(personagem, j.pos.x*TILE_WIDTH/2, j.pos.y*TILE_HEIGHT/2, 0);
+    al_draw_bitmap(personagem, j.pos.x*TILE_WIDTH, j.pos.y*TILE_HEIGHT, 0);
     al_flip_display();
 }
 
