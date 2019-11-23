@@ -8,8 +8,8 @@
 #include <stdio.h>
  
 // Atributos da tela
-const int LARGURA = 1280;
-const int ALTURA = 1024;
+const int LARGURA = 800;
+const int ALTURA = 600;
  
 
 
@@ -182,6 +182,7 @@ int main(void)
   {
 
     flagTuto=0;
+    flagJogo =0;
     // Verificamos se há eventos na fila
     while (!al_is_event_queue_empty(fila))
     {
@@ -232,14 +233,14 @@ int main(void)
       // Ou se o evento foi um clique do mouse
       else if (evento.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP)
       {
- //Clique no botao jogar       
+//Clique no botao jogar       
         if (evento.mouse.x >= LARGURA / 2 - al_get_bitmap_width(botao_jogar) / 2 &&
             evento.mouse.x <= LARGURA / 2 + al_get_bitmap_width(botao_jogar) / 2 &&
             evento.mouse.y >= (2*ALTURA) / 11 &&
             evento.mouse.y <= (3*ALTURA) / 11)
         {
           int flagoso =1;
-          int tecla;
+          int tecla, pressed=0; // tecla para guardar o numero e pressed pra checar se foi pressionado ou nn um numero válido
           int contador=0;
           char caractere;
           char buffer[15];
@@ -247,7 +248,7 @@ int main(void)
           strcpy(buffer, "");
 
           while(!flagJogo){
-
+//Tela de conexão com o server
              al_clear_to_color(al_map_rgb(0,0,0));
                 
                 al_draw_scaled_bitmap(maconheiro_de_mangue,0,0, al_get_bitmap_width(maconheiro_de_mangue),al_get_bitmap_height(maconheiro_de_mangue),0,0,LARGURA, ALTURA, 0 );
@@ -264,49 +265,216 @@ int main(void)
                     flagoso=0;
                     }
                 al_wait_for_event(fila,&evento);
-                if(evento.type==ALLEGRO_EVENT_KEY_UP && contador< 11){
+                if(evento.type==ALLEGRO_EVENT_KEY_UP){
                   switch(evento.keyboard.keycode)
                   {
                   case ALLEGRO_KEY_0:
                     tecla = 0;
+                    pressed = 1;
                     break;
                   case ALLEGRO_KEY_1:
                     tecla = 1;
+                    pressed = 1;
                     break;
                   case ALLEGRO_KEY_2:
                     tecla = 2;
+                    pressed = 1;
                     break;
                   case ALLEGRO_KEY_3:
                     tecla = 3;
+                    pressed = 1;
                     break;
                   case ALLEGRO_KEY_4:
                     tecla = 4;
+                    pressed = 1;
                     break;
                   case ALLEGRO_KEY_5:
                     tecla = 5;
+                    pressed = 1;
                     break;
                   case ALLEGRO_KEY_6:
                     tecla = 6;
+                    pressed = 1;
                     break;
                   case ALLEGRO_KEY_7:
                     tecla = 7;
+                    pressed = 1;
                     break;
                   case ALLEGRO_KEY_8:
                     tecla = 8;
+                    pressed = 1;
                     break;
                   case ALLEGRO_KEY_9:
                     tecla = 9;
+                    pressed = 1;
+                    break;
+                  case ALLEGRO_KEY_BACKSPACE:
+                    tecla = -1;
+                    pressed = 1;
+                    break;
+                  case ALLEGRO_KEY_ENTER:
+                    tecla = -2;
+                    pressed = 1;
+                  default:
                     break;
                   }
-                  contador++;
-                  caractere = tecla +'0';
-                  strcat(buffer, &caractere);
-                  printf("%s\n", buffer);
-                  al_draw_text(fonte, al_map_rgb(0, 0, 0),LARGURA/8 + 50,550,0,buffer);
-                  al_flip_display();
+                  printf("%d  %d %d\n", tecla, contador, pressed);
+                  if(pressed==1 && tecla >-1 && contador<11){
+                    printf("buffer: %s\n", buffer);
+                    contador++;
+                    caractere = tecla +'0';
+                    strcat(buffer, &caractere);
+                    //al_draw_text(fonte, al_map_rgb(0, 0, 0),LARGURA/8 + 50,550,0,buffer);
+                    pressed=0;
+                  }
+                  else if(pressed==1 && tecla ==-1){
+                    
+                    //Apagando o ultimo caractere
+                    int i;
+                    for(i=0;buffer[i]!='\0';i++){}
+                    if(i!=0) buffer[i-1] = '\0';
+                    pressed=0;
+                    contador--;
+                  }
+                  else if(pressed==1 && tecla==-2 && contador==11){
+                    
+                    // TRATAR O BUFFER PARA POR NA ENTRADA FORMATADA DA FUNÇÃO
+
+                    //QUANDO NÃO CONSEGUIR SE CONECTAR
+                    /* if(connectToServer(buffer)!=SERVER_UP){
+                      al_draw_scaled_bitmap(maconheiro_de_mangue,0,0, al_get_bitmap_width(maconheiro_de_mangue),al_get_bitmap_height(maconheiro_de_mangue),0,0,LARGURA, ALTURA, 0 );
+                      al_draw_text(fonte, al_map_rgb(0, 0, 0),LARGURA/8,200,0,"     FALHA AO CONECTAR");
+                      al_flip_display();
+                      al_rest(3.0);
+                      strcpy(buffer, "\0");
+                      contador =0;
+                      pressed=0;
+                    } */
+                      //else{
+                    
+                      //######   TELA DO NICK   ########
+                      int flagnick=0;
+                      //Cria e limpa o buffer
+                      char buf2[20];
+                      strcpy(buf2, "\0");
+                      int flagoso2, superflag=0;
+                      while(!flagnick){
+                        
+                        
+                        al_clear_to_color(al_map_rgb(0,0,0));                
+                        al_draw_scaled_bitmap(maconheiro_de_mangue,0,0, al_get_bitmap_width(maconheiro_de_mangue),al_get_bitmap_height(maconheiro_de_mangue),0,0,LARGURA, ALTURA, 0 );
+                        al_draw_text(fonte, al_map_rgb(0, 0, 0),LARGURA/8,200,0,"     DIGITE O SEU NICKNAME");
+                        al_draw_text(fonte, al_map_rgb(0, 0, 0),LARGURA/8,550,0,"NICK:");
+                        al_draw_text(fonte, al_map_rgb(255,255,255),(LARGURA / 2)-40, ((ALTURA*8)/11)+al_get_bitmap_height(botao_sair)/4, 0, "SAIR");
+                        if(flagoso2 ==1){
+                            
+                            al_set_target_bitmap(botao_sair);
+                            al_clear_to_color (al_map_rgb(65,105,255)); 
+                            al_set_target_bitmap(al_get_backbuffer(janela));
+                            al_draw_bitmap(botao_sair, LARGURA/2 - al_get_bitmap_width(botao_sair)/2, (ALTURA*8)/11, 0);
+                            al_draw_text(fonte, al_map_rgb(255,255,255),(LARGURA / 2)-40, ((ALTURA*8)/11)+al_get_bitmap_height(botao_sair)/4, 0, "SAIR");
+                            al_flip_display();
+                            flagoso2=0;
+                            }
+                        al_wait_for_event(fila,&evento);
+                        if(evento.type==ALLEGRO_EVENT_KEY_CHAR){ //SE FOR CHAR, BOTA NO BUFFER2
+                          int key = evento.keyboard.unichar;
+                          if((key>='a'&& key<='z') || (key>='A' && key<='Z') ){
+                            if(key>='a'&& key<='z') key = key - ('a'-'A');
+                            char letra = key;
+                            printf("letra: %c\n numero: %d\n", letra, letra);
+                            strcat(buf2, &letra);
+                            printf("buf2: %s\n", buf2);
+                          }
+                          else if(key == 8){ //BACKSPACE
+                            int i;
+                            printf("letra: %c\n numero: %d\n", key, key);
+                            for(i=0;buf2[i]!='\0';i++){}
+                            if(i!=0) buf2[i-1] = '\0';
+                          }
+                          else if(key == 13){    //ENTER
+                            //MANDA MSG PRO SERVER AQ
+
+                            return 0;
+                          }
+                        }
+                        else if(evento.type==ALLEGRO_EVENT_MOUSE_AXES){
+
+                          if (evento.mouse.x >= LARGURA / 2 - al_get_bitmap_width(botao_jogar) / 2 &&
+                          evento.mouse.x <= LARGURA / 2 + al_get_bitmap_width(botao_jogar) / 2 &&
+                          evento.mouse.y >= (8*ALTURA) / 11 &&
+                          evento.mouse.y <= (9*ALTURA) / 11)
+                          {
+                            al_set_target_bitmap(botao_sair);
+                            al_clear_to_color (al_map_rgb(255,0,0));
+                          }
+                          else
+                          {
+                            al_set_target_bitmap(botao_sair);
+                            al_clear_to_color (al_map_rgb(65,105,255));
+                          }
+
+                        }
+                        else if(evento.type==ALLEGRO_EVENT_MOUSE_BUTTON_UP)
+                        {
+                          if(evento.mouse.x >= LARGURA / 2 - al_get_bitmap_width(botao_jogar) / 2 &&
+                          evento.mouse.x <= LARGURA / 2 + al_get_bitmap_width(botao_jogar) / 2 &&
+                          evento.mouse.y >= (8*ALTURA) / 11 &&
+                          evento.mouse.y <= (9*ALTURA) / 11)
+                          {
+                            flagnick=1;
+                            clear_keybuf();
+                            strcpy(buf2, "\0");
+                            strcpy(buffer, "\0");
+                          }
+                        }
+                        al_set_target_bitmap(al_get_backbuffer(janela));
+                        al_draw_bitmap(botao_sair, LARGURA/2 - al_get_bitmap_width(botao_sair)/2,(ALTURA*8)/11, 0);
+                        al_draw_text(fonte, al_map_rgb(0, 0, 0),LARGURA/4,550,0,buf2);
+                        al_draw_text(fonte, al_map_rgb(255,255,255),(LARGURA / 2)-40, ((ALTURA*8)/11)+al_get_bitmap_height(botao_sair)/4, 0, "SAIR");
+                        al_flip_display();
+
+                      }
+                      pressed=0;
+                      contador=0;
+
+                  }
+                  
+                  
                 }
+                else if(evento.type==ALLEGRO_EVENT_MOUSE_AXES){
 
+                  if (evento.mouse.x >= LARGURA / 2 - al_get_bitmap_width(botao_jogar) / 2 &&
+                  evento.mouse.x <= LARGURA / 2 + al_get_bitmap_width(botao_jogar) / 2 &&
+                  evento.mouse.y >= (8*ALTURA) / 11 &&
+                  evento.mouse.y <= (9*ALTURA) / 11)
+                  {
+                    al_set_target_bitmap(botao_sair);
+                    al_clear_to_color (al_map_rgb(255,0,0));
+                  }
+                  else
+                  {
+                    al_set_target_bitmap(botao_sair);
+                    al_clear_to_color (al_map_rgb(65,105,255));
+                  }
 
+                }
+                else if(evento.type==ALLEGRO_EVENT_MOUSE_BUTTON_UP)
+                {
+                  if(evento.mouse.x >= LARGURA / 2 - al_get_bitmap_width(botao_jogar) / 2 &&
+                  evento.mouse.x <= LARGURA / 2 + al_get_bitmap_width(botao_jogar) / 2 &&
+                  evento.mouse.y >= (8*ALTURA) / 11 &&
+                  evento.mouse.y <= (9*ALTURA) / 11)
+                  {
+                    flagJogo=1;
+                  }
+                }
+                
+            al_set_target_bitmap(al_get_backbuffer(janela));
+            al_draw_bitmap(botao_sair, LARGURA/2 - al_get_bitmap_width(botao_sair)/2,(ALTURA*8)/11, 0);
+            al_draw_text(fonte, al_map_rgb(0, 0, 0),LARGURA/8 + 50,550,0,buffer);
+            al_draw_text(fonte, al_map_rgb(255,255,255),(LARGURA / 2)-40, ((ALTURA*8)/11)+al_get_bitmap_height(botao_sair)/4, 0, "SAIR");
+            al_flip_display();
 
           }
         }
@@ -320,7 +488,7 @@ int main(void)
             int flag =1;
            // al_set_audio_stream_playing(musica, 0);
             while(!flagTuto){
-                //printf("ENTRA\n");
+
                 al_clear_to_color(al_map_rgb(0,0,0));
                 
                 al_draw_scaled_bitmap(maconheiro_de_mangue,0,0, al_get_bitmap_width(maconheiro_de_mangue),al_get_bitmap_height(maconheiro_de_mangue),0,0,LARGURA, ALTURA, 0 );
