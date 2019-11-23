@@ -75,6 +75,12 @@ bool freeToWalk(int **grid, int i, int j);
 
 void movePlayer(int **grid, Player *p, Move act);
 
+bool isOil(int **grid, int i, int j);
+
+Pos genNewPos(int **grid);
+
+void catch(Player *player, Oleo *oleo, int **grid);
+
 void actPlayer(int **grd, Game *g, Move act, int id);
 
 void printOil(Oleo *oleos);

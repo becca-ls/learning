@@ -121,11 +121,29 @@ bool isOil(int **grid, int i, int j)
     return false;
 }
 
+Pos genNewPos(int **grid)
+{
+    Pos new;
+    bool flag = false;
+    while(!flag)
+    {
+        new.x = rand()%COLUMN;
+        new.y = rand()%ROW;
+        if(checkFreePos(grid, new.y, new.x))
+            flag = true;
+    }
+
+    return new;
+}
+
 void catch (Player *player, Oleo *oleo, int **grid)
 {
-    oleo->inGame = false;
+    oleo->inGame = true;
     player->oleo_points += 1;
     setFreePos(grid, oleo->pos.y, oleo->pos.x);
+    oleo->pos = genNewPos(grid);
+    printGrid(grid);
+    grid[oleo->pos.y][oleo->pos.x] = OIL;
 }
 
 void actPlayer(int **grid, Game *g, Move act, int id)
@@ -158,8 +176,6 @@ void actPlayer(int **grid, Game *g, Move act, int id)
         }
     }
 
-    /*if(outOfOil(*g))
-        initOils(g, grid);*/
 }
 
 bool outOfOil(Game g)
