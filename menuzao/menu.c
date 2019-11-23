@@ -243,9 +243,9 @@ int main(void)
           int tecla, pressed=0; // tecla para guardar o numero e pressed pra checar se foi pressionado ou nn um numero válido
           int contador=0;
           char caractere;
-          char buffer[15];
+          char buffer[12];
           //LIMPA BUFFER;
-          strcpy(buffer, "");
+          strcpy(buffer, "\0");
 
           while(!flagJogo){
 //Tela de conexão com o server
@@ -315,6 +315,11 @@ int main(void)
                   case ALLEGRO_KEY_ENTER:
                     tecla = -2;
                     pressed = 1;
+                    break;
+                  case ALLEGRO_KEY_FULLSTOP:
+                    tecla = 10;
+                    pressed =1;
+                    break;
                   default:
                     break;
                   }
@@ -322,9 +327,12 @@ int main(void)
                   if(pressed==1 && tecla >-1 && contador<11){
                     printf("buffer: %s\n", buffer);
                     contador++;
-                    caractere = tecla +'0';
+                    if(tecla<10) caractere = tecla +'0';
+                    else caractere = '.';
+                    printf("caractere: %c\n", caractere);
                     strcat(buffer, &caractere);
-                    //al_draw_text(fonte, al_map_rgb(0, 0, 0),LARGURA/8 + 50,550,0,buffer);
+                    caractere = buffer[strlen(buffer)-1];
+                    if((caractere>='a' && caractere<='z') ||(caractere>='A' && caractere<='Z')) buffer[strlen(buffer)-1] = '\0';
                     pressed=0;
                   }
                   else if(pressed==1 && tecla ==-1){
@@ -357,7 +365,7 @@ int main(void)
                       //Cria e limpa o buffer
                       char buf2[20];
                       strcpy(buf2, "\0");
-                      int flagoso2, superflag=0;
+                      int flagoso2;
                       while(!flagnick){
                         
                         
@@ -377,7 +385,7 @@ int main(void)
                             flagoso2=0;
                             }
                         al_wait_for_event(fila,&evento);
-                        if(evento.type==ALLEGRO_EVENT_KEY_CHAR){ //SE FOR CHAR, BOTA NO BUFFER2
+                        if(evento.type == ALLEGRO_EVENT_KEY_CHAR){ //SE FOR CHAR, BOTA NO BUFFER2
                           int key = evento.keyboard.unichar;
                           if((key>='a'&& key<='z') || (key>='A' && key<='Z') ){
                             if(key>='a'&& key<='z') key = key - ('a'-'A');
@@ -395,7 +403,6 @@ int main(void)
                           else if(key == 13){    //ENTER
                             //MANDA MSG PRO SERVER AQ
 
-                            return 0;
                           }
                         }
                         else if(evento.type==ALLEGRO_EVENT_MOUSE_AXES){
@@ -423,7 +430,6 @@ int main(void)
                           evento.mouse.y <= (9*ALTURA) / 11)
                           {
                             flagnick=1;
-                            clear_keybuf();
                             strcpy(buf2, "\0");
                             strcpy(buffer, "\0");
                           }
