@@ -4,6 +4,9 @@
 #include <ctype.h>
 #include <stdbool.h>
 #include <allegro5/allegro.h>
+#include <allegro5/allegro_native_dialog.h>
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_primitives.h>
 #include "client.h"
@@ -39,6 +42,14 @@ ALLEGRO_BITMAP *folha_sprite = NULL;
 
 bool inicializa()
 {
+    if (!al_init_font_addon()){
+        puts("Erro ao inicializar o font addon");
+        exit(1);
+    }
+    if (!al_init_ttf_addon()){
+        puts("Erro ao inicializar o ttf addon");
+        exit(1);
+    }
     if (!al_init())
     {
         puts("Incapaz de iniciar o allegro");
@@ -109,9 +120,10 @@ void conecta()
     sendMsgToServer(nick, (int)strlen(nick) + 1);
 }
 
-void draw(Game j, ALLEGRO_BITMAP *bitmap, ALLEGRO_BITMAP *personagem, ALLEGRO_BITMAP *oil)
+void draw(Game j, ALLEGRO_BITMAP *bitmap, ALLEGRO_BITMAP *personagem, ALLEGRO_BITMAP *oil, ALLEGRO_FONT *fonte, int score)
 {
     al_draw_bitmap(bitmap, 0, 0, 0);
+    al_draw_textf(fonte, al_map_rgb(0, 0, 0), 10, 0, ALLEGRO_ALIGN_LEFT, "Pontuaçao: %d", score);
     
     if(checkOil(j.oil_a))
         al_draw_bitmap(oil, j.oil_a.pos.x*TILE_WIDTH, j.oil_a.pos.y*TILE_HEIGHT, 0);
@@ -129,6 +141,7 @@ void draw(Game j, ALLEGRO_BITMAP *bitmap, ALLEGRO_BITMAP *personagem, ALLEGRO_BI
 
 int main()
 {
+    int score = 0;
     Game jogo;
     //jogo.oleo = (Oleo *)malloc(NUMBER_OF_STAINS*sizeof(Oleo));
     conecta();
@@ -140,6 +153,7 @@ int main()
     ALLEGRO_BITMAP *background = NULL, *imgP = NULL, *imgOil = NULL;
     ALLEGRO_EVENT_QUEUE *evQueue = NULL;
     ALLEGRO_TIMER *timer = NULL;
+    ALLEGRO_FONT *fonte = NULL;
     
     inicializa();
 
@@ -149,7 +163,8 @@ int main()
     imgOil = al_load_bitmap("oil.png");
     evQueue = al_create_event_queue();
     folha_sprite = al_load_bitmap("chrono.png");
-
+    fonte = al_load_font("arial.ttf", 20, 0);
+    
     al_register_event_source(evQueue, al_get_display_event_source(display));
     al_register_event_source(evQueue, al_get_keyboard_event_source());
 
@@ -222,10 +237,12 @@ int main()
                 break;
             }
         }
+        //JOGO É JOGO , USA JOGO QUANDO FOR USAR ALGO RELACIONADO AO JOGO 
         recvMsgFromServer(&jogo, DONT_WAIT);
         printPlayer(jogo.p1);
         printf("(%d, %d); (%d, %d); (%d, %d)\n", jogo.oil_a.pos.x, jogo.oil_a.pos.y, jogo.oil_b.pos.x, jogo.oil_b.pos.y, jogo.oil_c.pos.x, jogo.oil_c.pos.y);
-        draw(jogo, background,folha_sprite, imgOil);
+        score = jogo.p1.oleo_points;
+        draw(jogo, background,folha_sprite, imgOil, fonte, score);
     }
     
     return 0;

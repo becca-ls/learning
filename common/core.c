@@ -155,11 +155,14 @@ void actPlayer(int **grid, Game *g, Move act, int id)
         if (isOil(grid, g->p1.pos.y, g->p1.pos.x))
         {
             if (poscmp(g->p1.pos, g->oil_a.pos))
-                catch (&(g->p1), &(g->oil_a), grid);
+                {catch (&(g->p1), &(g->oil_a), grid);
+                g->p1.oleo_points+=9;}
             else if (poscmp(g->p1.pos, g->oil_b.pos))
-                catch (&(g->p1), &(g->oil_b), grid);
+                {catch (&(g->p1), &(g->oil_b), grid);
+                g->p1.oleo_points+=9;}
             else if (poscmp(g->p1.pos, g->oil_c.pos))
-                catch (&(g->p1), &(g->oil_c), grid);
+                {catch (&(g->p1), &(g->oil_c), grid);
+                g->p1.oleo_points+=9;}
         }
     }
     else if (id == 1)
@@ -167,12 +170,15 @@ void actPlayer(int **grid, Game *g, Move act, int id)
         movePlayer(grid, &(g->p2), act);
         if (isOil(grid, g->p2.pos.y, g->p2.pos.x))
         {
-            if (poscmp(g->p2.pos, g->oil_a.pos))
+            if (poscmp(g->p2.pos, g->oil_a.pos)){
                 catch (&(g->p2), &(g->oil_a), grid);
-            else if (poscmp(g->p2.pos, g->oil_b.pos))
+                g->p2.oleo_points+=9;}
+            else if (poscmp(g->p2.pos, g->oil_b.pos)){
                 catch (&(g->p2), &(g->oil_b), grid);
-            else if (poscmp(g->p2.pos, g->oil_c.pos))
+                g->p2.oleo_points+=9;}
+            else if (poscmp(g->p2.pos, g->oil_c.pos)){
                 catch (&(g->p2), &(g->oil_c), grid);
+                g->p2.oleo_points+=9;}
         }
     }
 
