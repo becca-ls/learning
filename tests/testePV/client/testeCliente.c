@@ -161,7 +161,7 @@ int main()
     display = al_create_display(WIDTH, HEIGHT);
     background = al_load_bitmap("praia.png");
     imgP = al_load_bitmap("irra.png");
-    imgOil = al_load_bitmap("oil.png");
+    imgOil = al_load_bitmap("oil2.png");
     evQueue = al_create_event_queue();
     folha_sprite = al_load_bitmap("chrono.png");
     fonte = al_load_font("arial.ttf", 20, 0);
