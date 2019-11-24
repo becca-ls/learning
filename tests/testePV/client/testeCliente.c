@@ -32,7 +32,7 @@ ALLEGRO_BITMAP *folha_sprite = NULL;
     //posicoes X e Y da folha de sprites que serao mostradas na tela
     int regiao_x_folha=0, regiao_y_folha=0;
     //quantos frames devem se passar para atualizar para o proximo sprite
-    int frames_sprite=12, cont_frames=0;
+    int frames_sprite=6, cont_frames=0;
     //posicao X Y da janela em que sera mostrado o sprite
     int pos_x_sprite=64, pos_y_sprite=128;
     //velocidade X Y que o sprite ira se mover pela janela
@@ -179,28 +179,7 @@ int main()
         ALLEGRO_TIMEOUT timeout;
         al_init_timeout(&timeout, 1 / FPS);
         al_wait_for_event_until(evQueue, &event, &timeout);
-         //a cada disparo do timer, incrementa cont_frames
-            cont_frames++;
-             //se alcancou a quantidade de frames que precisa passar para mudar para o proximo sprite
-            if (cont_frames >= frames_sprite){
-                //reseta cont_frames
-                cont_frames=0;
-                //incrementa a coluna atual, para mostrar o proximo sprite
-                coluna_atual++;
-                //se coluna atual passou da ultima coluna
-                if (coluna_atual >= colunas_folha){
-                    //volta pra coluna inicial
-                    coluna_atual=0;
-                    //calcula a posicao Y da folha que sera mostrada
-                    regiao_y_folha = linha_atual * altura_sprite;
-                }
-                //calcula a regiao X da folha que sera mostrada
-                regiao_x_folha = coluna_atual * largura_sprite;
-            }
-            //se o sprite estiver perto da borda direita ou esquerda da tela
-            
- 
-            //atualiza as posicoes X Y do sprite de acordo com a velocidade, positiva ou negativa
+      
            
         if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
             break;
@@ -212,32 +191,34 @@ int main()
             {
             case ALLEGRO_KEY_W:
                 acao.act = UP;
-                linha_atual=4;
-                coluna_atual=1;
+                linha_atual=3;
+                coluna_atual=0;
                 sendMsgToServer((Move *)&acao, sizeof(Move));
                 break;
             case ALLEGRO_KEY_S:
                 acao.act = DOWN;
-                linha_atual=1;
-                coluna_atual=1;
+                linha_atual=0;
+                coluna_atual=0;
                 sendMsgToServer((Move *)&acao, sizeof(Move));
                 break;
             case ALLEGRO_KEY_A:
                 acao.act = LEFT;
-                linha_atual=2;
-                coluna_atual=1;
+                linha_atual=1;
+                coluna_atual=0;
                 sendMsgToServer((Move *)&acao, sizeof(Move));
                 break;
             case ALLEGRO_KEY_D:
                 acao.act = RIGHT;
-                linha_atual=3;
-                coluna_atual=1;
+                linha_atual=2;
+                coluna_atual=0;
                 sendMsgToServer((Move *)&acao, sizeof(Move));
                 break;
             default:
                 break;
             }
         }
+        regiao_x_folha = coluna_atual * largura_sprite;
+        regiao_y_folha = linha_atual * altura_sprite;
         //JOGO É JOGO , USA JOGO QUANDO FOR USAR ALGO RELACIONADO AO JOGO 
         recvMsgFromServer(&jogo, DONT_WAIT);
         printPlayer(jogo.p1);
