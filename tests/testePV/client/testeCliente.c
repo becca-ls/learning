@@ -24,7 +24,7 @@
 ALLEGRO_BITMAP *folha_sprite = NULL;
 
  //largura e altura de cada sprite dentro da folha
-    int altura_sprite=72, largura_sprite=48;
+    int altura_sprite=304/4, largura_sprite=52;
     //quantos sprites tem em cada linha da folha, e a atualmente mostrada
     int colunas_folha=4, coluna_atual=0;
     //quantos sprites tem em cada coluna da folha, e a atualmente mostrada
@@ -163,7 +163,7 @@ int main()
     imgP = al_load_bitmap("irra.png");
     imgOil = al_load_bitmap("oil2.png");
     evQueue = al_create_event_queue();
-    folha_sprite = al_load_bitmap("chrono.png");
+    folha_sprite = al_load_bitmap("serge.png");
     fonte = al_load_font("arial.ttf", 20, 0);
     
     al_register_event_source(evQueue, al_get_display_event_source(display));
