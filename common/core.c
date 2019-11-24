@@ -52,6 +52,8 @@ Player player(char *nick, int id)
     e.oleo_points = 0;
     e.pos.x = id == 0? 3: COLUMN-3;
     e.pos.y = 2;
+    e.sprites.x = 0;
+    e.sprites.y = 0;
     strcpy(e.nick, nick);
 
     if(id == 0)
