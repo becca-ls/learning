@@ -141,6 +141,7 @@ void draw(Game j, ALLEGRO_BITMAP *bitmap, ALLEGRO_BITMAP *personagem, ALLEGRO_BI
 
 int main()
 {
+
     int score = 0;
     Game jogo;
     //jogo.oleo = (Oleo *)malloc(NUMBER_OF_STAINS*sizeof(Oleo));
@@ -243,6 +244,28 @@ int main()
         printf("(%d, %d); (%d, %d); (%d, %d)\n", jogo.oil_a.pos.x, jogo.oil_a.pos.y, jogo.oil_b.pos.x, jogo.oil_b.pos.y, jogo.oil_c.pos.x, jogo.oil_c.pos.y);
         score = jogo.p1.oleo_points;
         draw(jogo, background,folha_sprite, imgOil, fonte, score);
+        if(jogo.p1.game_result != -1){
+            if(jogo.p1.game_result == 1){
+                background = al_load_bitmap("win.jpg");
+                al_clear_to_color(al_map_rgb(0, 0, 0));
+                al_draw_bitmap(background, 110, 80, 0);
+                fonte = al_load_font("arial.ttf", 100, 0);
+                al_draw_text(fonte, al_map_rgb(0, 0, 255), 640, 512, ALLEGRO_ALIGN_CENTER, "Voce venceu!");
+                al_flip_display();
+                al_rest(10.0);
+                exit(1);
+            }
+            else if(jogo.p1.game_result == 0){
+                background = al_load_bitmap("lose.jpg");
+                al_clear_to_color(al_map_rgb(0, 0, 0));
+                al_draw_bitmap(background, 110, 80, 0);
+                fonte = al_load_font("arial.ttf", 100, 0);
+                al_draw_text(fonte, al_map_rgb(0, 0, 255), 640, 512, ALLEGRO_ALIGN_CENTER, "Voce perdeu!");
+                al_flip_display();
+                al_rest(10.0);
+                exit(1);
+            }
+        }
     }
     
     return 0;

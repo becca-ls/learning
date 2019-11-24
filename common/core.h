@@ -36,6 +36,8 @@ typedef struct
     char saude;
     Pos pos;
     int oleo_points;
+    //game_result se ganha ou perde , todo mundo perde
+    int game_result;
     
 } Player;
 

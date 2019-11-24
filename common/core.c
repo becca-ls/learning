@@ -40,6 +40,7 @@ Player player(char *nick)
 {
     Player e;
 
+    e.game_result = -1;
     e.oleo_points = 0;
     e.pos.x = 3;
     e.pos.y = 2;
@@ -163,6 +164,10 @@ void actPlayer(int **grid, Game *g, Move act, int id)
             else if (poscmp(g->p1.pos, g->oil_c.pos))
                 {catch (&(g->p1), &(g->oil_c), grid);
                 g->p1.oleo_points+=9;}
+            if (g->p1.oleo_points == 250){
+                g->p1.game_result = 1;
+                g->p2.game_result = 0;
+            }
         }
     }
     else if (id == 1)
@@ -179,6 +184,10 @@ void actPlayer(int **grid, Game *g, Move act, int id)
             else if (poscmp(g->p2.pos, g->oil_c.pos)){
                 catch (&(g->p2), &(g->oil_c), grid);
                 g->p2.oleo_points+=9;}
+            if (g->p1.oleo_points == 250){
+                g->p2.game_result = 1;
+                g->p1.game_result = 0;
+            }
         }
     }
 
