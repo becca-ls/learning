@@ -81,8 +81,7 @@ int main()
             if (msg_ret.status == DISCONNECT_MSG)
             {
                 qtdPlayers = qtdPlayers - 1;
-                printf("Jogador %s do id %d desconectou. Finalizando servidor.\n\n", jogadores[msg_ret.client_id].nick,
-                       msg_ret.client_id, msg_ret.client_id);
+                printf("Jogador %s do id %d desconectou. Finalizando servidor.\n\n", jogadores[msg_ret.client_id].nick, msg_ret.client_id);
                 aux.game_state = POSGAME;
                 broadcast((void *)&aux, sizeof(Game));
             }

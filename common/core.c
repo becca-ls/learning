@@ -52,9 +52,13 @@ Player player(char *nick, int id)
     e.oleo_points = 0;
     e.pos.x = id == 0? 3: COLUMN-3;
     e.pos.y = 2;
-    e.saude = 10;
     strcpy(e.nick, nick);
 
+    if(id == 0)
+        strcpy(e.skin, "chrono.png");
+    else
+        strcpy(e.skin, "serge.png");
+    
     return e;
 }
 
@@ -241,7 +245,7 @@ void printOil(Oleo *oleos)
 
 void printPlayer(Player player)
 {
-    printf("%s %d %d (%d, %d)\n", player.nick, player.saude, player.oleo_points, player.pos.x, player.pos.y);
+    printf("%s %d (%d, %d)\n", player.nick, player.oleo_points, player.pos.x, player.pos.y);
 }
 
 void printGrid(int **grid)
