@@ -10,35 +10,22 @@
 #define BUFFER_SIZE (NICK_SIZE + 100)
 #define MAX_CLIENTS 2
 
-void imprime(int **grid)
-{
-    int i, j;
-    for (i = 0; i < ROW; i++)
-    {
-        for (j = 0; j < COLUMN; j++)
-        {
-            //Procedimento para salvar um inteiro em vez de um char;
-            printf("%d", grid[i][j]);
-        }
-            puts("");
-    }
-}
 
 int main()
 {
     Game aux;
     //Matriz do jogo
     int **grid = NULL;
-
+    int secs = 10;
     //Le o arquivo "map.txt" e aloca em grid
     grid = readGrid();
-    
-    Player *jogadores = (Player *)malloc(MAX_CLIENTS*sizeof(Player));
-    
+
+    Player *jogadores = (Player *)malloc(MAX_CLIENTS * sizeof(Player));
+
     aux.game_state = PREGAME;
     initOils(&aux, grid);
     //String auxiliar
-    char str_buffer[NICK_SIZE+1];
+    char str_buffer[NICK_SIZE + 1];
 
     //Inicia servidor
     serverInit(MAX_CLIENTS);
@@ -51,19 +38,22 @@ int main()
         int id = acceptConnection();
         if (id != NO_CONNECTION)
         {
-                Player new;
-                recvMsgFromClient(str_buffer, id, WAIT_FOR_IT);
-                printf("%s conectou ao jogo\n", str_buffer);
-                new = player(str_buffer);
-                addPlayer(jogadores, new, &qtdPlayers);
-                if(id == 0)
-                    aux.p1 = jogadores[id];
-                else
-                    aux.p2 = jogadores[id];
-                
-                printPlayer(jogadores[id]);
-                sendMsgToClient((Game *)&aux, sizeof(Game), id);
+            Player new;
+            recvMsgFromClient(str_buffer, id, WAIT_FOR_IT);
+            printf("%s conectou ao jogo\n", str_buffer);
+            new = player(str_buffer, id);
+            addPlayer(jogadores, new, &qtdPlayers);
+            if (qtdPlayers == 2)
+            {
                 aux.game_state = INGAME;
+            }
+            if (id == 0)
+                aux.p1 = jogadores[id];
+            else
+                aux.p2 = jogadores[id];
+
+            printPlayer(jogadores[id]);
+            sendMsgToClient((Game *)&aux, sizeof(Game), id);
         }
 
         //enviaInimigo(jogadores, numJogadores, &estado_jogo);
@@ -71,15 +61,19 @@ int main()
         Move act;
         while (aux.game_state == INGAME)
         {
-            
+
             struct msg_ret_t msg_ret = recvMsg(&act);
             if (msg_ret.status == MESSAGE_OK)
             {
                 actPlayer(grid, &aux, act, msg_ret.client_id);
+                if(checkEnd(aux))
+                {
+                    aux.game_state = POSGAME;
+                }
                 jogadores[0] = aux.p1;
                 jogadores[1] = aux.p2;
                 //if(outOfOil(aux))
-                  //  initOils(&aux, grid);
+                //  initOils(&aux, grid);
                 broadcast((Game *)&aux, sizeof(Game));
                 //TODO TRATAR AS MENSAGENS RECEBIDAS
             }
@@ -87,11 +81,15 @@ int main()
             if (msg_ret.status == DISCONNECT_MSG)
             {
                 qtdPlayers = qtdPlayers - 1;
-                printf("Jogador %s do id %d desconectou.\nPosicao %d esta livre\n", jogadores[msg_ret.client_id].nick,
+                printf("Jogador %s do id %d desconectou. Finalizando servidor.\n\n", jogadores[msg_ret.client_id].nick,
                        msg_ret.client_id, msg_ret.client_id);
+                aux.game_state = POSGAME;
+                broadcast((void *)&aux, sizeof(Game));
             }
         }
 
+        if(aux.game_state == POSGAME)
+            break;
         //TODO resto do servidor
     }
     // Dando free no grid

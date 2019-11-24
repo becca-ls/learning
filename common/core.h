@@ -36,8 +36,6 @@ typedef struct
     char saude;
     Pos pos;
     int oleo_points;
-    //game_result se ganha ou perde , todo mundo perde
-    int game_result;
     
 } Player;
 
@@ -65,7 +63,9 @@ enum MAP
 
 int **readGrid();
 
-Player player(char *nick);
+bool checkEnd(Game j);
+
+Player player(char *nick, int id);
 
 void addPlayer(Player *v, Player e, int *qtdPlayers);
 

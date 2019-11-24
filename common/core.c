@@ -36,13 +36,21 @@ int **readGrid()
     return matrix;
 }
 
-Player player(char *nick)
+bool checkEnd(Game j)
+{
+        
+    if(j.p1.oleo_points == 10 || j.p2.oleo_points == 10)
+        return true;
+
+    return false;
+}
+
+Player player(char *nick, int id)
 {
     Player e;
 
-    e.game_result = -1;
     e.oleo_points = 0;
-    e.pos.x = 3;
+    e.pos.x = id == 0? 3: COLUMN-3;
     e.pos.y = 2;
     e.saude = 10;
     strcpy(e.nick, nick);
@@ -156,18 +164,11 @@ void actPlayer(int **grid, Game *g, Move act, int id)
         if (isOil(grid, g->p1.pos.y, g->p1.pos.x))
         {
             if (poscmp(g->p1.pos, g->oil_a.pos))
-                {catch (&(g->p1), &(g->oil_a), grid);
-                g->p1.oleo_points+=9;}
+                catch (&(g->p1), &(g->oil_a), grid);
             else if (poscmp(g->p1.pos, g->oil_b.pos))
-                {catch (&(g->p1), &(g->oil_b), grid);
-                g->p1.oleo_points+=9;}
+                catch (&(g->p1), &(g->oil_b), grid);
             else if (poscmp(g->p1.pos, g->oil_c.pos))
-                {catch (&(g->p1), &(g->oil_c), grid);
-                g->p1.oleo_points+=9;}
-            if (g->p1.oleo_points == 250){
-                g->p1.game_result = 1;
-                g->p2.game_result = 0;
-            }
+                catch (&(g->p1), &(g->oil_c), grid);
         }
     }
     else if (id == 1)
@@ -175,19 +176,12 @@ void actPlayer(int **grid, Game *g, Move act, int id)
         movePlayer(grid, &(g->p2), act);
         if (isOil(grid, g->p2.pos.y, g->p2.pos.x))
         {
-            if (poscmp(g->p2.pos, g->oil_a.pos)){
+            if (poscmp(g->p2.pos, g->oil_a.pos))
                 catch (&(g->p2), &(g->oil_a), grid);
-                g->p2.oleo_points+=9;}
-            else if (poscmp(g->p2.pos, g->oil_b.pos)){
+            else if (poscmp(g->p2.pos, g->oil_b.pos))
                 catch (&(g->p2), &(g->oil_b), grid);
-                g->p2.oleo_points+=9;}
-            else if (poscmp(g->p2.pos, g->oil_c.pos)){
+            else if (poscmp(g->p2.pos, g->oil_c.pos))
                 catch (&(g->p2), &(g->oil_c), grid);
-                g->p2.oleo_points+=9;}
-            if (g->p1.oleo_points == 250){
-                g->p2.game_result = 1;
-                g->p1.game_result = 0;
-            }
         }
     }
 
