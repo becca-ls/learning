@@ -179,7 +179,7 @@ int main()
         ALLEGRO_TIMEOUT timeout;
         al_init_timeout(&timeout, 1 / FPS);
         al_wait_for_event_until(evQueue, &event, &timeout);
-      
+        cont_frames++;
            
         if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
             break;
@@ -192,33 +192,49 @@ int main()
             case ALLEGRO_KEY_W:
                 acao.act = UP;
                 linha_atual=3;
-                coluna_atual=0;
+               
                 sendMsgToServer((Move *)&acao, sizeof(Move));
                 break;
             case ALLEGRO_KEY_S:
                 acao.act = DOWN;
                 linha_atual=0;
-                coluna_atual=0;
+                
                 sendMsgToServer((Move *)&acao, sizeof(Move));
                 break;
             case ALLEGRO_KEY_A:
                 acao.act = LEFT;
                 linha_atual=1;
-                coluna_atual=0;
+               
                 sendMsgToServer((Move *)&acao, sizeof(Move));
                 break;
             case ALLEGRO_KEY_D:
                 acao.act = RIGHT;
                 linha_atual=2;
-                coluna_atual=0;
+               
                 sendMsgToServer((Move *)&acao, sizeof(Move));
                 break;
             default:
                 break;
             }
         }
-        regiao_x_folha = coluna_atual * largura_sprite;
-        regiao_y_folha = linha_atual * altura_sprite;
+         
+             //se alcancou a quantidade de frames que precisa passar para mudar para o proximo sprite
+            if (cont_frames >= frames_sprite){
+                //reseta cont_frames
+                cont_frames=0;
+                //incrementa a coluna atual, para mostrar o proximo sprite
+                coluna_atual++;
+                //se coluna atual passou da ultima coluna
+                if (coluna_atual >= colunas_folha){
+                    //volta pra coluna inicial
+                    coluna_atual=0;
+                    //calcula a posicao Y da folha que sera mostrada
+                    regiao_y_folha = linha_atual * altura_sprite;
+                }
+                //calcula a regiao X da folha que sera mostrada
+                regiao_x_folha = coluna_atual * largura_sprite;
+            }
+     
         //JOGO É JOGO , USA JOGO QUANDO FOR USAR ALGO RELACIONADO AO JOGO 
         recvMsgFromServer(&jogo, DONT_WAIT);
         printPlayer(jogo.p1);
