@@ -57,7 +57,7 @@ Player player(char *nick, int id)
     strcpy(e.nick, nick);
 
     if (id == 0)
-        strcpy(e.skin, "luffyy.png");
+        strcpy(e.skin, "luffy.png");
     else
         strcpy(e.skin, "chrono.png");
 
@@ -108,49 +108,34 @@ void movePlayer(int **grid, Player *p, Move act)
     switch (act.act)
     {
     case UP:
-            p->sprites.y=3;
         if (freeToWalk(grid, (p->pos.y) - 1, (p->pos.x)))
         {
-            p->sprites.y = 1;
-            p->sprites.x = 4;
+            p->sprites.y = 3;
             p->pos.y -= 1;
         }
         break;
     case DOWN:
         if (freeToWalk(grid, (p->pos.y) + 1, (p->pos.x)))
-<<<<<<< HEAD
         {
-            p->sprites.y = 1;
-            p->sprites.x = 1;
-=======
-            p->sprites.y=0;
->>>>>>> 229a151466fd776ea822e7b9df7a2c35b0a6ce20
+            p->sprites.y = 0;
             p->pos.y += 1;
         }
         break;
     case LEFT:
         if (freeToWalk(grid, (p->pos.y), (p->pos.x) - 1))
-<<<<<<< HEAD
         {
-            p->sprites.y = 2;
-            p->sprites.x = 1;
-=======
-            p->sprites.y=1;
->>>>>>> 229a151466fd776ea822e7b9df7a2c35b0a6ce20
+            p->sprites.y = 1;
             p->pos.x -= 1;
         }
+
         break;
     case RIGHT:
         if (freeToWalk(grid, (p->pos.y), (p->pos.x) + 1))
-<<<<<<< HEAD
         {
-            p->sprites.y = 3;
-            p->sprites.x = 1;
-=======
-            p->sprites.y=2;
->>>>>>> 229a151466fd776ea822e7b9df7a2c35b0a6ce20
+            p->sprites.y = 2;
             p->pos.x += 1;
         }
+
         break;
     default:
         break;

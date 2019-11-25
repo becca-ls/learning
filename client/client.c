@@ -807,11 +807,7 @@ void conecta()
   sendMsgToServer(nick, (int)strlen(nick) + 1);
 }
 
-<<<<<<< HEAD
-void draw(Game j, ALLEGRO_BITMAP *bitmap, ALLEGRO_BITMAP *p1, ALLEGRO_BITMAP *p2, ALLEGRO_BITMAP *oil, ALLEGRO_FONT *fonte)
-=======
 void draw(Game j, ALLEGRO_BITMAP *bitmap, ALLEGRO_BITMAP *personagem1, ALLEGRO_BITMAP *personagem2, ALLEGRO_BITMAP *oil, ALLEGRO_FONT *fonte)
->>>>>>> 229a151466fd776ea822e7b9df7a2c35b0a6ce20
 {
   al_draw_bitmap(bitmap, 0, 0, 0);
   al_draw_textf(fonte, al_map_rgb(0, 0, 0), 10, 0, ALLEGRO_ALIGN_LEFT, "PONTUACAO: p1 %d X p2 %d", j.p1.oleo_points * 10, j.p2.oleo_points * 10);
@@ -822,13 +818,8 @@ void draw(Game j, ALLEGRO_BITMAP *bitmap, ALLEGRO_BITMAP *personagem1, ALLEGRO_B
   if (checkOil(j.oil_c))
     al_draw_bitmap(oil, j.oil_c.pos.x * TILE_WIDTH, j.oil_c.pos.y * TILE_HEIGHT, 0);
 
-<<<<<<< HEAD
-  al_draw_bitmap_region(p1, j.p1.sprites.x*largura_sprite, j.p1.sprites.y*altura_sprite, largura_sprite, altura_sprite, j.p1.pos.x * TILE_WIDTH, j.p1.pos.y * TILE_HEIGHT, 0);
-  al_draw_bitmap_region(p2, j.p2.sprites.x*largura_sprite, j.p2.sprites.y*altura_sprite, largura_sprite, altura_sprite, j.p2.pos.x * TILE_WIDTH, j.p2.pos.y * TILE_HEIGHT, 0);
-=======
-  al_draw_bitmap_region(personagem1,  regiao_x_folha, regiao_y_folha, largura_sprite, altura_sprite, j.p1.pos.x * TILE_WIDTH, j.p1.pos.y * TILE_HEIGHT, 0);
-  al_draw_bitmap_region(personagem2,  regiao_x_folha, regiao_y_folha, largura_sprite, altura_sprite, j.p2.pos.x * TILE_WIDTH, j.p2.pos.y * TILE_HEIGHT, 0);
->>>>>>> 229a151466fd776ea822e7b9df7a2c35b0a6ce20
+  al_draw_bitmap_region(personagem1, j.p1.sprites.x * largura_sprite, j.p1.sprites.y*altura_sprite, largura_sprite, altura_sprite, j.p1.pos.x * TILE_WIDTH, j.p1.pos.y * TILE_HEIGHT, 0);
+  al_draw_bitmap_region(personagem2,  j.p2.sprites.x*largura_sprite, j.p2.sprites.y*altura_sprite, largura_sprite, altura_sprite, j.p2.pos.x * TILE_WIDTH, j.p2.pos.y * TILE_HEIGHT, 0);
   al_flip_display();
 }
 
@@ -879,22 +870,22 @@ int main()
         {
         case ALLEGRO_KEY_W:
           acao.act = UP;
-          jogo.p1.sprites.y=3;
+          //jogo.p1.sprites.y=3;
           sendMsgToServer((Move *)&acao, sizeof(Move));
           break;
         case ALLEGRO_KEY_S:
           acao.act = DOWN;
-          jogo.p1.sprites.y=0;
+          //jogo.p1.sprites.y=0;
           sendMsgToServer((Move *)&acao, sizeof(Move));
           break;
         case ALLEGRO_KEY_A:
           acao.act = LEFT;
-          jogo.p1.sprites.y=1;
+          //jogo.p1.sprites.y=1;
           sendMsgToServer((Move *)&acao, sizeof(Move));
           break;
         case ALLEGRO_KEY_D:
           acao.act = RIGHT;
-          jogo.p1.sprites.y=2;
+          //jogo.p1.sprites.y=2;
           sendMsgToServer((Move *)&acao, sizeof(Move));
           break;
         default:
@@ -908,11 +899,7 @@ int main()
       regiao_y_folha = jogo.p1.sprites.y * altura_sprite;
       printPlayer(jogo.p1);
       printf("(%d, %d); (%d, %d); (%d, %d)\n", jogo.oil_a.pos.x, jogo.oil_a.pos.y, jogo.oil_b.pos.x, jogo.oil_b.pos.y, jogo.oil_c.pos.x, jogo.oil_c.pos.y);
-<<<<<<< HEAD
       draw(jogo, background, imgP1, imgP2, imgOil, fonte);
-=======
-      draw(jogo, background, imgP1,imgP2, imgOil, fonte);
->>>>>>> 229a151466fd776ea822e7b9df7a2c35b0a6ce20
     }
   }
 
