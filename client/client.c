@@ -870,22 +870,22 @@ int main()
         {
         case ALLEGRO_KEY_W:
           acao.act = UP;
-          k=3;
+          jogo.p1.sprites.y=3;
           sendMsgToServer((Move *)&acao, sizeof(Move));
           break;
         case ALLEGRO_KEY_S:
           acao.act = DOWN;
-          k=0;
+          jogo.p1.sprites.y=0;
           sendMsgToServer((Move *)&acao, sizeof(Move));
           break;
         case ALLEGRO_KEY_A:
           acao.act = LEFT;
-          k=1;
+          jogo.p1.sprites.y=1;
           sendMsgToServer((Move *)&acao, sizeof(Move));
           break;
         case ALLEGRO_KEY_D:
           acao.act = RIGHT;
-          k=2;
+          jogo.p1.sprites.y=2;
           sendMsgToServer((Move *)&acao, sizeof(Move));
           break;
         default:
@@ -896,7 +896,7 @@ int main()
 
       recvMsgFromServer(&jogo, DONT_WAIT);
       regiao_x_folha = jogo.p1.sprites.x * largura_sprite;
-      regiao_y_folha = k* altura_sprite;
+      regiao_y_folha = jogo.p1.sprites.y * altura_sprite;
       printPlayer(jogo.p1);
       printf("(%d, %d); (%d, %d); (%d, %d)\n", jogo.oil_a.pos.x, jogo.oil_a.pos.y, jogo.oil_b.pos.x, jogo.oil_b.pos.y, jogo.oil_c.pos.x, jogo.oil_c.pos.y);
       draw(jogo, background, imgP1,imgP2, imgOil, fonte);
