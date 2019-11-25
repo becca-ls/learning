@@ -32,6 +32,8 @@ typedef struct
 
 typedef struct
 {
+    int regiaox;
+    int regiaoy;
     char nick[NICK_SIZE+1];
     char skin[20];
     Pos pos, sprites;

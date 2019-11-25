@@ -818,8 +818,8 @@ void draw(Game j, ALLEGRO_BITMAP *bitmap, ALLEGRO_BITMAP *personagem1, ALLEGRO_B
   if (checkOil(j.oil_c))
     al_draw_bitmap(oil, j.oil_c.pos.x * TILE_WIDTH, j.oil_c.pos.y * TILE_HEIGHT, 0);
 
-  al_draw_bitmap_region(personagem1,  regiao_x_folha, regiao_y_folha, largura_sprite, altura_sprite, j.p1.pos.x * TILE_WIDTH, j.p1.pos.y * TILE_HEIGHT, 0);
-  al_draw_bitmap_region(personagem2,  regiao_x_folha, regiao_y_folha, largura_sprite, altura_sprite, j.p2.pos.x * TILE_WIDTH, j.p2.pos.y * TILE_HEIGHT, 0);
+  al_draw_bitmap_region(personagem1,j.p1.regiaox, j.p1.regiaoy, largura_sprite, altura_sprite, j.p1.pos.x * TILE_WIDTH, j.p1.pos.y * TILE_HEIGHT, 0);
+  al_draw_bitmap_region(personagem2,j.p2.regiaox, j.p2.regiaoy, largura_sprite, altura_sprite, j.p2.pos.x * TILE_WIDTH, j.p2.pos.y * TILE_HEIGHT, 0);
   al_flip_display();
 }
 
@@ -870,33 +870,46 @@ int main()
         {
         case ALLEGRO_KEY_W:
           acao.act = UP;
-          jogo.p1.sprites.y=3;
           sendMsgToServer((Move *)&acao, sizeof(Move));
           break;
         case ALLEGRO_KEY_S:
           acao.act = DOWN;
-          jogo.p1.sprites.y=0;
           sendMsgToServer((Move *)&acao, sizeof(Move));
           break;
         case ALLEGRO_KEY_A:
           acao.act = LEFT;
-          jogo.p1.sprites.y=1;
           sendMsgToServer((Move *)&acao, sizeof(Move));
           break;
         case ALLEGRO_KEY_D:
           acao.act = RIGHT;
-          jogo.p1.sprites.y=2;
           sendMsgToServer((Move *)&acao, sizeof(Move));
           break;
         default:
           break;
         }
       }
-     
-
       recvMsgFromServer(&jogo, DONT_WAIT);
-      regiao_x_folha = jogo.p1.sprites.x * largura_sprite;
-      regiao_y_folha = jogo.p1.sprites.y * altura_sprite;
+       jogo.p1.regiaoy = jogo.p1.sprites.y * altura_sprite;
+      jogo.p2.regiaoy = jogo.p2.sprites.y * altura_sprite;
+       if (cont_frames >= frames_sprite){
+                //reseta cont_frames
+                cont_frames=0;
+                //incrementa a coluna atual, para mostrar o proximo sprite
+                jogo.p1.sprites.x++;
+                jogo.p2.sprites.x++;
+                //se coluna atual passou da ultima coluna
+                if (jogo.p1.sprites.x >= colunas_folha){
+                    //volta pra coluna inicial
+                    jogo.p1.sprites.x=0;
+                    jogo.p2.sprites.x=0;
+                    //calcula a posicao Y da folha que sera mostrada
+                }
+                //calcula a regiao X da folha que sera mostrada
+                jogo.p1.regiaox  = jogo.p1.sprites.x * largura_sprite;
+                jogo.p2.regiaox = jogo.p2.sprites.x * largura_sprite;
+            }
+  
+      
       printPlayer(jogo.p1);
       printf("(%d, %d); (%d, %d); (%d, %d)\n", jogo.oil_a.pos.x, jogo.oil_a.pos.y, jogo.oil_b.pos.x, jogo.oil_b.pos.y, jogo.oil_c.pos.x, jogo.oil_c.pos.y);
       draw(jogo, background, imgP1,imgP2, imgOil, fonte);

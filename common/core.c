@@ -113,18 +113,18 @@ void movePlayer(int **grid, Player *p, Move act)
             p->pos.y -= 1;
         break;
     case DOWN:
-        if (freeToWalk(grid, (p->pos.y) + 1, (p->pos.x)))
             p->sprites.y=0;
+        if (freeToWalk(grid, (p->pos.y) + 1, (p->pos.x)))
             p->pos.y += 1;
         break;
     case LEFT:
-        if (freeToWalk(grid, (p->pos.y), (p->pos.x) - 1))
             p->sprites.y=1;
+        if (freeToWalk(grid, (p->pos.y), (p->pos.x) - 1))
             p->pos.x -= 1;
         break;
     case RIGHT:
-        if (freeToWalk(grid, (p->pos.y), (p->pos.x) + 1))
             p->sprites.y=2;
+        if (freeToWalk(grid, (p->pos.y), (p->pos.x) + 1))
             p->pos.x += 1;
         break;
     default:
