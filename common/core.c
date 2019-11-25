@@ -38,8 +38,8 @@ int **readGrid()
 
 bool checkEnd(Game j)
 {
-        
-    if(j.p1.oleo_points == 10 || j.p2.oleo_points == 10)
+
+    if (j.p1.oleo_points == 10 || j.p2.oleo_points == 10)
         return true;
 
     return false;
@@ -50,17 +50,17 @@ Player player(char *nick, int id)
     Player e;
 
     e.oleo_points = 0;
-    e.pos.x = id == 0? 3: COLUMN-3;
+    e.pos.x = id == 0 ? 3 : COLUMN - 3;
     e.pos.y = 2;
     e.sprites.x = 0;
     e.sprites.y = 0;
     strcpy(e.nick, nick);
 
-    if(id == 0)
-        strcpy(e.skin, "luffy.png");
+    if (id == 0)
+        strcpy(e.skin, "luffyy.png");
     else
         strcpy(e.skin, "chrono.png");
-    
+
     return e;
 }
 
@@ -109,19 +109,35 @@ void movePlayer(int **grid, Player *p, Move act)
     {
     case UP:
         if (freeToWalk(grid, (p->pos.y) - 1, (p->pos.x)))
+        {
+            p->sprites.y = 1;
+            p->sprites.x = 4;
             p->pos.y -= 1;
+        }
         break;
     case DOWN:
         if (freeToWalk(grid, (p->pos.y) + 1, (p->pos.x)))
+        {
+            p->sprites.y = 1;
+            p->sprites.x = 1;
             p->pos.y += 1;
+        }
         break;
     case LEFT:
         if (freeToWalk(grid, (p->pos.y), (p->pos.x) - 1))
+        {
+            p->sprites.y = 2;
+            p->sprites.x = 1;
             p->pos.x -= 1;
+        }
         break;
     case RIGHT:
         if (freeToWalk(grid, (p->pos.y), (p->pos.x) + 1))
+        {
+            p->sprites.y = 3;
+            p->sprites.x = 1;
             p->pos.x += 1;
+        }
         break;
     default:
         break;
@@ -140,11 +156,11 @@ Pos genNewPos(int **grid)
 {
     Pos new;
     bool flag = false;
-    while(!flag)
+    while (!flag)
     {
-        new.x = rand()%COLUMN;
-        new.y = rand()%ROW;
-        if(checkFreePos(grid, new.y, new.x))
+        new.x = rand() % COLUMN;
+        new.y = rand() % ROW;
+        if (checkFreePos(grid, new.y, new.x))
             flag = true;
     }
 
@@ -190,7 +206,6 @@ void actPlayer(int **grid, Game *g, Move act, int id)
                 catch (&(g->p2), &(g->oil_c), grid);
         }
     }
-
 }
 
 bool outOfOil(Game g)

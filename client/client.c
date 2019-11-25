@@ -807,7 +807,7 @@ void conecta()
   sendMsgToServer(nick, (int)strlen(nick) + 1);
 }
 
-void draw(Game j, ALLEGRO_BITMAP *bitmap, ALLEGRO_BITMAP *personagem, ALLEGRO_BITMAP *oil, ALLEGRO_FONT *fonte)
+void draw(Game j, ALLEGRO_BITMAP *bitmap, ALLEGRO_BITMAP *p1, ALLEGRO_BITMAP *p2, ALLEGRO_BITMAP *oil, ALLEGRO_FONT *fonte)
 {
   al_draw_bitmap(bitmap, 0, 0, 0);
   al_draw_textf(fonte, al_map_rgb(0, 0, 0), 10, 0, ALLEGRO_ALIGN_LEFT, "PONTUACAO: p1 %d X p2 %d", j.p1.oleo_points * 10, j.p2.oleo_points * 10);
@@ -818,8 +818,8 @@ void draw(Game j, ALLEGRO_BITMAP *bitmap, ALLEGRO_BITMAP *personagem, ALLEGRO_BI
   if (checkOil(j.oil_c))
     al_draw_bitmap(oil, j.oil_c.pos.x * TILE_WIDTH, j.oil_c.pos.y * TILE_HEIGHT, 0);
 
-  al_draw_bitmap_region(personagem, coluna_atual, linha_atual, largura_sprite, altura_sprite, j.p1.pos.x * TILE_WIDTH, j.p1.pos.y * TILE_HEIGHT, 0);
-  al_draw_bitmap_region(personagem, coluna_atual, linha_atual, largura_sprite, altura_sprite, j.p2.pos.x * TILE_WIDTH, j.p2.pos.y * TILE_HEIGHT, 0);
+  al_draw_bitmap_region(p1, j.p1.sprites.x*largura_sprite, j.p1.sprites.y*altura_sprite, largura_sprite, altura_sprite, j.p1.pos.x * TILE_WIDTH, j.p1.pos.y * TILE_HEIGHT, 0);
+  al_draw_bitmap_region(p2, j.p2.sprites.x*largura_sprite, j.p2.sprites.y*altura_sprite, largura_sprite, altura_sprite, j.p2.pos.x * TILE_WIDTH, j.p2.pos.y * TILE_HEIGHT, 0);
   al_flip_display();
 }
 
@@ -841,6 +841,7 @@ int main()
     display = al_create_display(WIDTH, HEIGHT);
     background = al_load_bitmap("praia.png");
     imgP1 = al_load_bitmap(jogo.p1.skin);
+    imgP2 = al_load_bitmap(jogo.p2.skin);
     imgOil = al_load_bitmap("oil.png");
     evQueue = al_create_event_queue();
     fonte = al_load_font("arial.ttf", 20, 0);
@@ -898,7 +899,7 @@ int main()
       recvMsgFromServer(&jogo, DONT_WAIT);
       printPlayer(jogo.p1);
       printf("(%d, %d); (%d, %d); (%d, %d)\n", jogo.oil_a.pos.x, jogo.oil_a.pos.y, jogo.oil_b.pos.x, jogo.oil_b.pos.y, jogo.oil_c.pos.x, jogo.oil_c.pos.y);
-      draw(jogo, background, imgP1, imgOil, fonte);
+      draw(jogo, background, imgP1, imgP2, imgOil, fonte);
     }
   }
 
