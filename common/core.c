@@ -57,9 +57,9 @@ Player player(char *nick, int id)
     strcpy(e.nick, nick);
 
     if(id == 0)
-        strcpy(e.skin, "chrono.png");
+        strcpy(e.skin, "luffy.png");
     else
-        strcpy(e.skin, "serge.png");
+        strcpy(e.skin, "chrono.png");
     
     return e;
 }

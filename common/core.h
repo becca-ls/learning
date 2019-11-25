@@ -33,7 +33,7 @@ typedef struct
 typedef struct
 {
     char nick[NICK_SIZE+1];
-    char skin[15];
+    char skin[20];
     Pos pos, sprites;
     int oleo_points;
     

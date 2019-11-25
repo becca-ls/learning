@@ -22,7 +22,7 @@
 #define WIDTH 1280
 
 //largura e altura de cada sprite dentro da folha
-int altura_sprite = 304 / 4, largura_sprite = 52;
+int altura_sprite = 72, largura_sprite = 48;
 //quantos sprites tem em cada linha da folha, e a atualmente mostrada
 int colunas_folha = 4, coluna_atual = 0;
 //quantos sprites tem em cada coluna da folha, e a atualmente mostrada
@@ -837,10 +837,10 @@ int main()
     printf("(%d, %d); (%d, %d); (%d, %d)\n", jogo.oil_a.pos.x, jogo.oil_a.pos.y, jogo.oil_b.pos.x, jogo.oil_b.pos.y, jogo.oil_c.pos.x, jogo.oil_c.pos.y);
 
     inicializa();
-
+    recvMsgFromServer(&jogo, DONT_WAIT);
     display = al_create_display(WIDTH, HEIGHT);
     background = al_load_bitmap("praia.png");
-    imgP1 = al_load_bitmap("chrono.png");
+    imgP1 = al_load_bitmap(jogo.p1.skin);
     imgOil = al_load_bitmap("oil.png");
     evQueue = al_create_event_queue();
     fonte = al_load_font("arial.ttf", 20, 0);
