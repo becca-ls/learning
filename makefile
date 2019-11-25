@@ -2,7 +2,7 @@
 CLIENTDIR := client
 
 # server code directory name
-SERVERDIR := tests/testePV/server
+SERVERDIR := server
 
 # common code directory name
 COMMONDIR := common

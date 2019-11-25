@@ -100,16 +100,16 @@ int menu(Game *jogo)
     return false;
   }*/
 
-  musica = al_load_audio_stream("mus.ogg", 4, 1024);
+  musica = al_load_audio_stream("assets/menu/mus.ogg", 4, 1024);
   if (!musica)
   {
     fprintf(stderr, "Falha ao carregar audio.\n");
   }
 
   //Carrega aS fonteS
-  fonte = al_load_font("4b.ttf", 30, 0);
+  fonte = al_load_font("assets/fonts/4b.ttf", 30, 0);
 
-  fonte2 = al_load_font("fast99.ttf", 150, 0);
+  fonte2 = al_load_font("assets/fonts/fast99.ttf", 150, 0);
 
   if (!fonte)
   {
@@ -142,7 +142,7 @@ int menu(Game *jogo)
     return -1;
   }
   // Carrega imagem
-  maconheiro_de_mangue = al_load_bitmap("chico.jpg");
+  maconheiro_de_mangue = al_load_bitmap("assets/menu/chico.jpg");
 
   al_draw_bitmap(maconheiro_de_mangue, 0, 0, 0);
 
@@ -842,9 +842,9 @@ int main()
     background = al_load_bitmap("praia.png");
     imgP1 = al_load_bitmap(jogo.p1.skin);
     imgP2 = al_load_bitmap(jogo.p2.skin);
-    imgOil = al_load_bitmap("oil.png");
+    imgOil = al_load_bitmap("assets/oil.png");
     evQueue = al_create_event_queue();
-    fonte = al_load_font("arial.ttf", 20, 0);
+    fonte = al_load_font("assets/fonts/arial.ttf", 20, 0);
 
     al_register_event_source(evQueue, al_get_display_event_source(display));
     al_register_event_source(evQueue, al_get_keyboard_event_source());
@@ -925,7 +925,7 @@ int main()
       strcat(texto, jogo.p2.nick);
     int allign = (int)strlen(texto);
     al_clear_to_color(al_map_rgb(0, 0, 0));
-    fonte = al_load_ttf_font("4b.ttf", 38, 0);
+    fonte = al_load_ttf_font("assets/fonts/4b.ttf", 38, 0);
     al_draw_text(fonte, al_map_rgb(255, 255, 255), WIDTH / 2, HEIGHT / 2, ALLEGRO_ALIGN_CENTER, texto);
     al_flip_display();
     al_rest(10);
