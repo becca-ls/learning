@@ -115,39 +115,24 @@ void movePlayer(int **grid, Player *p, Move act)
         }
         break;
     case DOWN:
-<<<<<<< HEAD
-            p->sprites.y=0;
-        if (freeToWalk(grid, (p->pos.y) + 1, (p->pos.x)))
-=======
         if (freeToWalk(grid, (p->pos.y) + 1, (p->pos.x)))
         {
             p->sprites.y = 0;
->>>>>>> 82985334ec129f9d9431f8bc6caea5d4a3cf964e
             p->pos.y += 1;
         }
         break;
     case LEFT:
-<<<<<<< HEAD
-            p->sprites.y=1;
-        if (freeToWalk(grid, (p->pos.y), (p->pos.x) - 1))
-=======
         if (freeToWalk(grid, (p->pos.y), (p->pos.x) - 1))
         {
             p->sprites.y = 1;
->>>>>>> 82985334ec129f9d9431f8bc6caea5d4a3cf964e
             p->pos.x -= 1;
         }
 
         break;
     case RIGHT:
-<<<<<<< HEAD
-            p->sprites.y=2;
-        if (freeToWalk(grid, (p->pos.y), (p->pos.x) + 1))
-=======
         if (freeToWalk(grid, (p->pos.y), (p->pos.x) + 1))
         {
             p->sprites.y = 2;
->>>>>>> 82985334ec129f9d9431f8bc6caea5d4a3cf964e
             p->pos.x += 1;
         }
 
