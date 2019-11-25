@@ -912,7 +912,7 @@ int main()
       
       printPlayer(jogo.p1);
       printf("(%d, %d); (%d, %d); (%d, %d)\n", jogo.oil_a.pos.x, jogo.oil_a.pos.y, jogo.oil_b.pos.x, jogo.oil_b.pos.y, jogo.oil_c.pos.x, jogo.oil_c.pos.y);
-      draw(jogo, background, imgP1,imgP2, imgOil, fonte);
+      draw(jogo, background, imgP1, imgP2, imgOil, fonte);
     }
   }
 
